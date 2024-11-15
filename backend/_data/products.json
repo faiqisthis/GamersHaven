@@ -1,0 +1,188 @@
+[
+    {
+      "name": "Xbox 360",
+      "category": "console",
+      "price": 299.99,
+      "description": "The Xbox 360 redefined gaming and entertainment with high-definition graphics and a massive library of games.",
+      "availability": true,
+      "stock": 50,
+      "brand": "Microsoft",
+      "features": [
+        "HDMI output",
+        "Wireless controller",
+        "Xbox Live functionality",
+        "Backward compatibility with selected Xbox games"
+      ],
+      
+      "slug": "xbox-360"
+    },
+    {
+      "name": "Xbox One",
+      "category": "console",
+      "price": 499.99,
+      "description": "The Xbox One brings all your entertainment together in one place with stunning visuals and a powerful gaming experience.",
+      "availability": true,
+      "stock": 40,
+      "brand": "Microsoft",
+      "features": [
+        "4K Ultra HD support",
+        "Xbox Live integration",
+        "Backward compatibility with Xbox 360 games",
+        "Kinect sensor"
+      ],
+      "slug": "xbox-one"
+    },
+    {
+      "name": "Xbox Series X",
+      "category": "console",
+      "price": 499.99,
+      "description": "The Xbox Series X is the fastest, most powerful Xbox ever, delivering sensationally smooth frame rates at up to 120FPS with the visual pop of HDR.",
+      "availability": true,
+      "stock": 20,
+      "brand": "Microsoft",
+      "features": [
+        "12 Teraflops of processing power",
+        "1TB custom NVMe SSD",
+        "4K gaming at up to 120 FPS",
+        "8K HDR",
+        "Backward compatibility for thousands of games"
+      ],
+      "images":[
+           "https://res.cloudinary.com/dpsckqdgz/image/upload/v1731274969/1_m1x5sq.png",
+           "https://res.cloudinary.com/dpsckqdgz/image/upload/v1731274969/3_eukhkm.png",
+           "https://res.cloudinary.com/dpsckqdgz/image/upload/v1731274968/5_jotwp7.png",
+           "https://res.cloudinary.com/dpsckqdgz/image/upload/v1731274966/4_c9axmc.png",
+           "https://res.cloudinary.com/dpsckqdgz/image/upload/v1731274965/2_ajah4h.png"
+      ],
+      "slug": "xbox-series-x"
+    },
+    {
+      "name": "PlayStation 3",
+      "category": "console",
+      "price": 299.99,
+      "description": "The PlayStation 3 offers high-definition gaming and entertainment, with exclusive titles and support for Blu-ray discs.",
+      "availability": true,
+      "stock": 30,
+      "brand": "Sony",
+      "features": [
+        "1080p HD support",
+        "Blu-ray disc player",
+        "PlayStation Network integration",
+        "Exclusive games like Uncharted and God of War"
+      ],
+      "slug": "playstation-3"
+    },
+    {
+      "name": "PlayStation 4",
+      "category": "console",
+      "price": 399.99,
+      "description": "The PlayStation 4 offers immersive gaming experiences, a powerful processor, and a range of exclusive titles.",
+      "availability": true,
+      "stock": 35,
+      "brand": "Sony",
+      "features": [
+        "1080p HD gaming",
+        "PlayStation Plus membership for online gaming",
+        "Exclusive games like The Last of Us and Horizon Zero Dawn",
+        "Share Play functionality"
+      ],
+      "slug": "playstation-4"
+    },
+    {
+      "name": "PlayStation 4 Pro",
+      "category": "console",
+      "price": 499.99,
+      "description": "The PlayStation 4 Pro delivers stunning 4K resolution and a host of upgrades for the ultimate gaming experience.",
+      "availability": true,
+      "stock": 25,
+      "brand": "Sony",
+      "features": [
+        "4K Ultra HD support",
+        "Enhanced performance for smoother gameplay",
+        "HDR support",
+        "PlayStation VR compatibility"
+      ],
+      "slug": "playstation-4-pro"
+    },
+    {
+      "name": "PlayStation 5",
+      "category": "console",
+      "price": 499.99,
+      "description": "The PlayStation 5 brings next-gen gaming to life with a super-fast SSD, stunning graphics, and ultra-responsive controls.",
+      "availability": true,
+      "stock": 20,
+      "brand": "Sony",
+      "features": [
+        "8K support",
+        "Ultra-fast SSD for faster load times",
+        "Adaptive triggers and haptic feedback",
+        "Exclusive titles like Demon's Souls and Ratchet & Clank"
+      ],
+      "slug": "playstation-5"
+    },
+    {
+      "name": "PlayStation 5 Digital Edition",
+      "category": "console",
+      "price": 399.99,
+      "description": "The PlayStation 5 Digital Edition offers all the next-gen features of the PS5, without the physical disc drive.",
+      "availability": true,
+      "stock": 15,
+      "brand": "Sony",
+      "features": [
+        "8K support",
+        "Ultra-fast SSD",
+        "Digital-only experience",
+        "Exclusive games like Returnal and Spider-Man: Miles Morales"
+      ],
+      "slug": "playstation-5-digital-edition"
+    },
+    {
+      "name": "Nintendo Switch",
+      "category": "console",
+      "price": 299.99,
+      "description": "The Nintendo Switch lets you play at home or on the go, with a hybrid design and a great library of games.",
+      "availability": true,
+      "stock": 60,
+      "brand": "Nintendo",
+      "features": [
+        "Hybrid gaming system",
+        "Joy-Con controllers",
+        "Touchscreen display",
+        "Exclusive titles like The Legend of Zelda and Super Mario"
+      ],
+      "slug": "nintendo-switch"
+    },
+    {
+      "name": "Nintendo Switch OLED Model",
+      "category": "console",
+      "price": 349.99,
+      "description": "The Nintendo Switch OLED Model brings enhanced visuals with a vibrant OLED display and improved sound for portable gaming.",
+      "availability": true,
+      "stock": 40,
+      "brand": "Nintendo",
+      "features": [
+        "7-inch OLED display",
+        "Enhanced audio",
+        "Detachable Joy-Con controllers",
+        "Dock for TV mode"
+      ],
+      "slug": "nintendo-switch-oled-model"
+    },
+    {
+      "name": "Nintendo Switch Lite",
+      "category": "console",
+      "price": 199.99,
+      "description": "The Nintendo Switch Lite is a handheld-only version of the Nintendo Switch, designed for portable gaming.",
+      "availability": true,
+      "stock": 55,
+      "brand": "Nintendo",
+      "features": [
+        "Compact and lightweight",
+        "Built-in controls",
+        "Available in multiple colors",
+        "Great for handheld gaming"
+      ],
+      "slug": "nintendo-switch-lite"
+    }
+  ]
+  
