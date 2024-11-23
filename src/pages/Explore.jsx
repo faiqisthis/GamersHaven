@@ -15,7 +15,7 @@ function Explore() {
     const fetchConsoles = async () => {
       const response = await getConsoles();
       dispatch({
-        type: "GET_CONSOLES",
+        type: "SET_CONSOLES",
         payload: response.data.data.data,
       });
     };
@@ -26,6 +26,9 @@ function Explore() {
     })
 
   }, []);
+  if(loading) return(
+    <span className="loading loading-spinner loading-lg"></span>
+  )
   return (
     <>
       <div className="relative min-h-screen">
@@ -57,9 +60,6 @@ function Explore() {
           {/* Grid layout for consoles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 p-6">
             {
-              loading?(
-                <span className="loading loading-spinner loading-lg"></span>
-              ) : 
                 consoles.map((console) => (
                   <>
                   <Card key={console.id} console={console} />

@@ -67,3 +67,12 @@ export const updateProduct=asyncHandler(async(req,res,next) => {
   }
   res.status(201).json({success:true})
 })
+
+export const deleteProduct=asyncHandler(async (req,res,next) => {
+  const product=await Product.findByIdAndDelete(req.params.id)
+  if(!product){
+    return next(new ErrorResponse("Product was not found.",404))
+  }
+  res.status(201).json({success:true})
+}
+)
