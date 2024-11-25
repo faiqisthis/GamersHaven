@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
     token: null
   };
 
-  const [state, dispatch] = useReducer(userReducer, initialState);
+  const [state, userDispatch] = useReducer(userReducer, initialState);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,9 +21,9 @@ export const UserProvider = ({ children }) => {
               Authorization: `Bearer ${state.token}`,
             },
           });
-          dispatch({
+          userDispatch({
             type: "SET_USER",
-            payload: response.data,
+            payload: response.data.data,
           });
         } catch (error) {
           console.error("Error fetching user:", error);
@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
   }, [state.token]); // Dependency on state.token to refetch when token changes
 
   return (
-    <UserContext.Provider value={{ ...state, dispatch }}>
+    <UserContext.Provider value={{ ...state, userDispatch }}>
       {children}
     </UserContext.Provider>
   );

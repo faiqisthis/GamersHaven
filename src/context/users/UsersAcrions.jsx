@@ -14,3 +14,16 @@ export const getUsers=async() => {
     return response
   }
 }
+export const deleteUser=async(id)=>{
+  const response=await users.delete(`/api/v1/users/${id}`)
+  if(response){
+    return response
+  }
+}
+
+export const updateUser=async(id,updatedUser)=>{
+  const response=await users.put(`/api/v1/users/${id}`,updatedUser)
+  if(response){
+    return response
+  }
+}

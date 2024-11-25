@@ -55,7 +55,7 @@ function ItemList() {
     return <span className="loading loading-spinner loading-lg"></span>;
 
     return (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-h-screen">
         <table className="table ">
           {/* head */}
           <thead>

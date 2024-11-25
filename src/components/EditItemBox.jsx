@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { updateProduct } from "../context/product/ProductActions";
 import ProductContext from "../context/product/ProductContext";
-function EditBox({setShowBox, item }) {
+function EditItemBox({setShowBox, item }) {
   const {dispatch}=useContext(ProductContext)
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [name, setName] = useState(null);
@@ -148,4 +148,4 @@ function EditBox({setShowBox, item }) {
   );
 }
 
-export default EditBox;
+export default EditItemBox;

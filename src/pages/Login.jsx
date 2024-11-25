@@ -5,7 +5,7 @@ import { loginUser } from "../context/user/UserActions";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 function Login() {
-  const { dispatch } = useContext(UserContext);
+  const { userDispatch } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate=useNavigate()
@@ -14,7 +14,7 @@ function Login() {
     const token=await loginUser(email, password) 
     if(token){
       alert('Logged In Successfully')
-      dispatch({
+      userDispatch({
         type: "SET_TOKEN",
         payload: token,
       });

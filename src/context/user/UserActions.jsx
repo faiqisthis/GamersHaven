@@ -5,12 +5,13 @@ const user=axios.create({
    baseURL:import.meta.env.VITE_BACKEND_URL,
    headers:{
       'Content-Type':'application/json',
+      'Authorization': localStorage.getItem('authToken')? 'Bearer '+localStorage.getItem('authToken'):null
    }
 })
 export const loginUser=async (email,password)=>{
    const credentials={email,password}
   const response=await user.post("/api/v1/auth/login",credentials)
-  console.log(response.data)
+
   if(response.data.token){
    localStorage.setItem("authToken",response.data.token)
 }
@@ -25,8 +26,13 @@ export const registerUser= async (firstName,lastName,email,password)=>{
    }
    return response.data.token;
 }
-export const logoutUser=()=>{
+export const addToCart=async(productId,quantity)=>{
+   const response=await user.post("/api/v1/auth/cart",{productId,quantity})
+   if(response){
+      return response.data
+   }
+}
+export const logoutUser=async()=>{
   localStorage.removeItem("authToken")
-  
-
+  const response=await user.get("/api/v1/auth/logout")
 }

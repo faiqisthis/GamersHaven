@@ -1,4 +1,5 @@
 import User from "../models/Users.js";
+import Product from "../models/Products.js";
 import asyncHandler from "../middleware/async.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
@@ -13,6 +14,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     password,
     role,
   });
+  if(!user){
+    return next(new ErrorResponse('User not created', 400))
+  }
   sendTokenResponse(user, 200, res);
 });
 
@@ -131,3 +135,23 @@ const sendTokenResponse = (user, statusCode, res) => {
     .cookie("token", token, options)
     .json({ success: true, token });
 };
+
+export const addToCart=asyncHandler(async(req,res,next)=>{
+  const id=req.user.id
+  const {productId,quantity}=req.body
+  const user=await User.findById(id)
+  const product=await Product.findById(productId)
+  if(!user){
+   return(next(new ErrorResponse("No user found",401)))
+  }
+  if(product){
+    const existingItem=user.cart.items.find((item)=>item.productId.toString()===productId)
+    if(existingItem)
+    existingItem.quantity+=quantity
+    else{
+      user.cart.items.push({productId,quantity})
+    }
+    await user.save()
+    res.status(201).json({success:true,data:user})
+  }
+})

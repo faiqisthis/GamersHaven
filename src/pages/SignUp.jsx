@@ -4,8 +4,10 @@ import React from "react";
 import { registerUser } from "../context/user/UserActions";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import UsersContext from "../context/users/UsersContext";
 function SignUp() {
-  const { dispatch } = useContext(UserContext);
+  const { userDispatch } = useContext(UserContext);
+  const {usersDispatch}=useContext(UsersContext)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +17,8 @@ function SignUp() {
     e.preventDefault();
     const token = await registerUser(firstName, lastName, email, password);
     if (token) {
-      dispatch({ type: "SET_TOKEN", payload: token });
+      userDispatch({ type: "SET_TOKEN", payload: token });
+      usersDispatch({type:"ADD_USER",payload:{firstName,lastName,email}})
       navigate('/')
     }
   

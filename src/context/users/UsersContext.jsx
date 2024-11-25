@@ -5,12 +5,14 @@ const UsersContext = createContext();
 export const UsersProvider=({children}) => {
   const initalState={
     users:null,
-    loading:true
+    loading:true,
+    cart:[]
+
   }
-  const [state,dispatch]=useReducer(UsersReducer,initalState)
+  const [state,usersDispatch]=useReducer(UsersReducer,initalState)
 
   return(
-    <UsersContext.Provider value={{...state,dispatch}}>
+    <UsersContext.Provider value={{...state,usersDispatch}}>
         {children}
     </UsersContext.Provider>
   )

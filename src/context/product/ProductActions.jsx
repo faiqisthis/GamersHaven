@@ -34,7 +34,6 @@ if(response){
 export const getProduct=async(id)=>{
     const response=await product.get(`/api/v1/products/${id}`)
     if(response){
-        console.log(response.data.data)
         return response;
     }
 }

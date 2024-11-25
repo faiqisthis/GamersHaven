@@ -1,19 +1,23 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../context/product/ProductActions";
 import ProductContext from "../context/product/ProductContext";
+import { addToCart } from "../context/user/UserActions";
+import UserContext from "../context/user/UserContext";
 
 function ProductDetails() {
   const [product, setProduct] = useState(null); // Initially, product is null
   const [selectedImage, setSelectedImage] = useState(""); // Initialize selectedImage as empty string
   const { id } = useParams(); // Get product ID from URL
-  const {loading,dispatch}=useContext(ProductContext)
+  const { loading, dispatch } = useContext(ProductContext);
+  const [quantity, setQuantity] = useState(1);
+  const {user,userDispatch}=useContext(UserContext)
 
   useEffect(() => {
     dispatch({
       type: "SET_LOADING",
-      payload: true
-    })
+      payload: true,
+    });
     const fetchProduct = async (id) => {
       try {
         const response = await getProduct(id);
@@ -25,10 +29,11 @@ function ProductDetails() {
 
     fetchProduct(id);
     dispatch({
-      type:"SET_LOADING",
-      payload:false
-    })
-  }, [id]); // Re-run when `id` changes
+      type: "SET_LOADING",
+      payload: false,
+    });
+    console.log(user)
+  }, [id,user]);
 
   const { name, price, description, features, images } = product || {};
 
@@ -39,7 +44,18 @@ function ProductDetails() {
     }
   }, [images]); // Re-run when images change
 
-  if (loading) return <span className="loading loading-spinner loading-lg"></span>; // Render loading state while product is being fetched
+  const handleCartAddition = async () => {
+    const productId = id;
+    const response =await addToCart(productId,quantity)
+    if(response){
+      userDispatch({type:"SET_CART",payload:response.data})
+      alert("Added to Cart Successfully")
+    }
+  
+  };
+
+  if (loading)
+    return <span className="loading loading-spinner loading-lg"></span>; // Render loading state while product is being fetched
 
   return (
     <div className="hero w-full min-h-screen items-center">
@@ -69,12 +85,35 @@ function ProductDetails() {
         </div>
         <div className="px-6 lg:ml-7">
           <h1 className="text-4xl font-bold md:mt-0 mt-5">{name || ""}</h1>
-          <p className="mt-5 lg:w-[70%] w-[90%] text-justify">{description || ""}</p>
+          <p className="mt-5 lg:w-[70%] w-[90%] text-justify">
+            {description || ""}
+          </p>
           <h1 className="text-2xl mt-3 font-bold">{`$ ${price}` || ""}</h1>
           <hr className="mt-4 border-t-2 border-gray-400" />
-          <button className="mt-5 btn btn-secondary btn-md w-[30%] btn-circle">
-            Add to Cart
-          </button>
+          <div className="flex">
+            <button
+              onClick={() => handleCartAddition(id)}
+              className="mt-5 btn btn-secondary btn-md w-[30%] btn-circle"
+            >
+              Add to Cart
+            </button>
+            <div className="flex ml-5 mt-5 btn btn-circle btn-md sm:w-[20%] w-[35%] ">
+              <button
+                onClick={() => setQuantity(quantity - 1)}
+                disabled={quantity === 0 ? true : false}
+                className="sm:text-5xl text-3xl mr-3 sm:mr-5"
+              >
+                -
+              </button>
+              <p className="text-xl sm:text-2xl my-auto">{quantity}</p>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="sm:text-3xl text-2xl ml-3 sm:ml-5"
+              >
+                +
+              </button>
+            </div>
+          </div>
           <h1 className="text-2xl mt-5 font-bold">Features</h1>
           <ul className="list-none list-inside mt-5 mb-5 text-gray-400">
             {features ? (

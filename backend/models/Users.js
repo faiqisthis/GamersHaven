@@ -2,6 +2,26 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+const CartItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    default: 1,
+  },
+});
+
+// Virtual field to populate product details
+CartItemSchema.virtual('productDetails', {
+  ref: 'Product', // Reference the Product model
+  localField: 'productId', // Match productId in CartItem
+  foreignField: '_id', // Match _id in Product
+  justOne: true, // Return a single product
+});
+
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -25,6 +45,9 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'publisher'],
         default: 'user'
       },
+      cart: {
+        items: [CartItemSchema], 
+      },
       password: {
         type: String,
         required: [true, 'Please add a password'],
@@ -37,6 +60,9 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       }
+    },{
+      toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     });
     // Get JWT token
     userSchema.methods.getSignedJwtToken = function() {
@@ -67,7 +93,8 @@ const userSchema = new mongoose.Schema({
       const salt=await bcrypt.genSaltSync(10);
       this.password=await bcrypt.hash(this.password,salt);
 
-    })
+    },
+    )
 
 const userModel = mongoose.model('User', userSchema);
 export default userModel;

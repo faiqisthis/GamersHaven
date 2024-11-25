@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Homepage from "./components/Homepage";
@@ -14,9 +13,7 @@ import Admin from "./pages/Admin";
 import { UserProvider } from "./context/user/UserContext";
 import { ProductProvider } from "./context/product/ProductContext";
 import { UsersProvider } from "./context/users/UsersContext";
-import ItemList from "./pages/ItemList";
-import UserList from "./pages/UserList";
-import Stats from "./pages/Stats";
+import Cart from "./pages/Cart";
 function App() {
   return (
     <>
@@ -104,17 +101,6 @@ function App() {
                 />
                 <Route
                   exact
-                  path="/admin"
-                  element={
-                    <div>
-                      <Navbar />
-                      <Admin />
-                      <Footer />
-                    </div>
-                  }
-                />
-                <Route
-                  exact
                   path="/upload"
                   element={
                     <div>
@@ -129,9 +115,7 @@ function App() {
                   path="/admin/dashboard"
                   element={
                     <div>
-                      <Navbar />
-                      <Stats />
-                      <Footer />
+                      <Admin />
                     </div>
                   }
                 />
@@ -141,9 +125,7 @@ function App() {
                   path="/admin/products"
                   element={
                     <div>
-                      <Navbar />
-                      <ItemList />
-                      <Footer />
+                      <Admin />
                     </div>
                   }
                 />
@@ -152,8 +134,17 @@ function App() {
                   path="/admin/users"
                   element={
                     <div>
+                      <Admin />
+                    </div>
+                  }
+                />
+                <Route
+                  exact
+                  path="/user/:id/cart"
+                  element={
+                    <div>
                       <Navbar />
-                      <UserList />
+                      <Cart />
                       <Footer />
                     </div>
                   }
