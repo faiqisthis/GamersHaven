@@ -4,7 +4,7 @@ const UsersContext = createContext();
 
 export const UsersProvider=({children}) => {
   const initalState={
-    users:null,
+    users:[],
     loading:true,
     cart:[]
 

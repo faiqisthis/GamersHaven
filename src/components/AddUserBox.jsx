@@ -1,45 +1,43 @@
 import React, { useState, useEffect,useContext } from "react";
 import { FaXmark } from "react-icons/fa6";
-import { updateUser } from "../context/users/UsersActions";
+import {createUser } from "../context/users/UsersActions";
 import UsersContext from "../context/users/UsersContext";
-function EditUserBox({ user, setShowBox, showBox }) {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [email, setEmail] = useState();
-  const [role, setRole] = useState();
-  const { usersDispatch } = useContext(UsersContext);
-
-  useEffect(() => {
-    setSelectedUser(user);
-    setFirstName(user.firstName);
-    setLastName(user.lastName);
-    setEmail(user.email)
-    setRole(user.role)
-  }, []);
+function AddUserBox({ setAddBox,addBox }) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+  const { users,usersDispatch } = useContext(UsersContext);
 
   const handleCloseClick = () => {
-    setShowBox(false);
-    setSelectedUser(null);
+    setAddBox(false);
   };
 
   const handleFormSubmit=async() => {
-    const data={
-        ...selectedUser,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        role: role
+    if(firstName==="" || lastName==="" || email==="" ||role===""||password===""){
+        alert("No Field can be left empty.")
     }
-    const response= await updateUser(data._id,data)
-    if(response.data.success){
-        usersDispatch({type:'UPDATE_USER',payload:data})
-        setShowBox(false)
+    else{
+        const data={    
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password:password,
+            role: role
+        }
+
+        const response= await createUser(data)
+        
+        if(response.success){
+                usersDispatch({type:'ADD_USER',payload:response.data})
+                setAddBox(false)
+        }
     }
   }
   
   return (
-    selectedUser && (
+    addBox && (
       <div>
         {/* Overlay */}
         <div
@@ -72,7 +70,7 @@ function EditUserBox({ user, setShowBox, showBox }) {
           }}
         >
           <div className="">
-            <h3 className=" text-center text-3xl font-bold p-2 ">Edit Box</h3>
+            <h3 className=" text-center text-3xl font-bold p-2 ">Add User Box</h3>
             <div className="p-4">
               <label htmlFor="firstName" className="p-3 text-xl">
                 First Name
@@ -126,6 +124,18 @@ function EditUserBox({ user, setShowBox, showBox }) {
                 className="input w-full max-w-md input-primary"
               />
               <br />
+              <label htmlFor="email" className="p-3 text-xl">
+                Password
+              </label>
+              <input
+                required
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Type here"
+                className="input w-full max-w-md input-primary"
+              />
+              <br />
 
               <button
                 onClick={() => handleFormSubmit()}
@@ -155,4 +165,4 @@ function EditUserBox({ user, setShowBox, showBox }) {
     )
   );
 }
-export default EditUserBox;
+export default AddUserBox;

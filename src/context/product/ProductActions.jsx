@@ -4,8 +4,15 @@ const product=axios.create({
     baseURL:import.meta.env.VITE_BACKEND_URL,
     headers:{
        'Content-Type':'application/json',
+       'Authorization':`Bearer ${localStorage.getItem('authToken')}`
     }
 })
+export const addProduct=async(data)=>{
+  const response=await product.post('/api/v1/products',data)
+  if(response){
+    return response.data
+  }
+}
 export const getConsoles=async() => {
   const response=await product.get('/api/v1/products?category=console')
   if(response){

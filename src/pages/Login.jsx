@@ -1,26 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../context/user/UserContext";
 import { loginUser } from "../context/user/UserActions";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 function Login() {
-  const { userDispatch } = useContext(UserContext);
+  const { user,userDispatch } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate=useNavigate()
-  const validateUser = async(e) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromPage=location.state?.from ||"None"
+
+  useEffect(() => {
+      if(fromPage==='/user/cart'){
+        if(user){
+          navigate(`/user/${user._id}/cart`);
+        }
+      }
+  },[user])
+
+  const validateUser = async (e) => {
     e.preventDefault();
-    const token=await loginUser(email, password) 
-    if(token){
-      alert('Logged In Successfully')
+    const token = await loginUser(email, password);
+    if (token) {
+      alert("Logged In Successfully");
       userDispatch({
         type: "SET_TOKEN",
         payload: token,
       });
+      if(fromPage!=='/user/cart'){
+        navigate(fromPage)
+      }
     }
-      navigate('/')
   };
+
   return (
     <div className="hero bg-gray-900 min-h-screen">
       <div className="hero-content flex-col ">

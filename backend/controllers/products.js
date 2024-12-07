@@ -28,7 +28,8 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     consoleSpecs,
     gamePlatform,
     accessoryType,
-    slug
+    slug,images
+
   } = req.body;
   let productData = {
     name,
@@ -39,7 +40,8 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     availability,
     brand,
     features,
-    slug
+    slug,
+    images
   };
 
   // Add fields based on category

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-
-function MultiImageUpload() {
-  const [imageUrls, setImageUrls] = useState([]);
+import { useContext } from "react";
+import ProductContext from "../context/product/ProductContext";
+function UploadImage({imageUrls,setImageUrls}) {
+  const {upload_loading,dispatch}=useContext(ProductContext)
   const images = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
     headers: {
@@ -10,6 +11,10 @@ function MultiImageUpload() {
     },
   });
   const handleMultipleUpload = async (event) => {
+    dispatch({
+      type: "SET_UPLOAD_LOADING",
+      payload: true
+    })
     const files = Array.from(event.target.files); // Convert FileList to an array
 
     const promises = files.map(async (file) => {
@@ -25,12 +30,18 @@ function MultiImageUpload() {
         }
       );
       const data = await response.json();
+      dispatch({
+        type: "SET_UPLOAD_LOADING",
+        payload: false
+      })
       return data.secure_url;
     });
 
     try {
       const urls = await Promise.all(promises); // Resolve all upload promises
+      console.log(urls)
       setImageUrls(urls);
+      alert("Images Added Successfully")
       // const newImages={
       //   images:urls
       // }
@@ -42,15 +53,13 @@ function MultiImageUpload() {
   };
 
   return (
-    <div>
-      <input type="file" multiple onChange={handleMultipleUpload} />
-      <div>
-        {imageUrls.map((url, index) => (
-          <p key={index}>{url}</p>
-        ))}
-      </div>
-    </div>
+      <input
+        type="file"
+        className="file-input-primary file-input-md w-full max-w-xs p-3"
+        multiple
+        onChange={handleMultipleUpload}
+      />
   );
 }
 
-export default MultiImageUpload;
+export default UploadImage;

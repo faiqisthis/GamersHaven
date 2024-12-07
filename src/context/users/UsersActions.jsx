@@ -1,10 +1,9 @@
 import axios from 'axios'
 
-const token=localStorage.getItem("authToken")
 const users=axios.create({
     baseURL:import.meta.env.VITE_BACKEND_URL,
     headers:{
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
        'Content-Type':'application/json',
     }
 })
@@ -26,4 +25,11 @@ export const updateUser=async(id,updatedUser)=>{
   if(response){
     return response
   }
+}
+export const createUser=async(newUser)=>{
+  const response=await users.post('/api/v1/users',newUser)
+  if(response){
+    return(response.data)
+  }
+  
 }

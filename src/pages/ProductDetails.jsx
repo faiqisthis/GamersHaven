@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getProduct } from "../context/product/ProductActions";
 import ProductContext from "../context/product/ProductContext";
 import { addToCart } from "../context/user/UserActions";
@@ -12,6 +12,8 @@ function ProductDetails() {
   const { loading, dispatch } = useContext(ProductContext);
   const [quantity, setQuantity] = useState(1);
   const {user,userDispatch}=useContext(UserContext)
+  const navigate=useNavigate()
+  const location=useLocation()
 
   useEffect(() => {
     dispatch({
@@ -32,7 +34,7 @@ function ProductDetails() {
       type: "SET_LOADING",
       payload: false,
     });
-    console.log(user)
+    
   }, [id,user]);
 
   const { name, price, description, features, images } = product || {};
@@ -46,10 +48,15 @@ function ProductDetails() {
 
   const handleCartAddition = async () => {
     const productId = id;
-    const response =await addToCart(productId,quantity)
-    if(response){
-      userDispatch({type:"SET_CART",payload:response.data})
-      alert("Added to Cart Successfully")
+    if(user){
+      const response =await addToCart(productId,quantity)
+      if(response){
+        userDispatch({type:"SET_CART",payload:response.data})
+        alert("Added to Cart Successfully")
+      }
+    }
+    else{
+      navigate('/signin',{state:{from:location.pathname}})
     }
   
   };
@@ -61,14 +68,14 @@ function ProductDetails() {
     <div className="hero w-full min-h-screen items-center">
       <div className="flex flex-col lg:flex-row">
         <div className="flex flex-col-reverse lg:flex-row md:items-center lg:items-start">
-          <div className="flex flex-row lg:flex-col lg:space-y-2 justify-around lg:ml-5 ml-2 overflow-x-auto">
+          <div className="flex flex-row lg:flex-col lg:space-y-2  lg:ml-5 ml-2 justify-center">
             {images &&
               images.map((image, index) => (
                 <img
                   key={index}
                   src={image}
                   alt="Product Image"
-                  className={`object-cover lg:h-20 lg:w-16  cursor-pointer transition-opacity duration-300 ${
+                  className={`object-cover lg:h-20 lg:w-16 h-12 mb-2  cursor-pointer transition-opacity duration-300 ${
                     selectedImage === image ? "opacity-100" : "opacity-40"
                   }`}
                   onClick={() => setSelectedImage(image)} // Update selected image on click

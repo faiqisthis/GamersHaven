@@ -1,5 +1,5 @@
 import express from 'express'
-import{registerUser,login,getMe,forgotPassword,resetPassword,updateUser,updatePassword,logout,addToCart} from '../controllers/auth.js'
+import{registerUser,login,getMe,forgotPassword,resetPassword,updateUser,updatePassword,logout,addToCart, deleteFromCart} from '../controllers/auth.js'
 import {protect} from '../middleware/auth.js'
 const router=express.Router();
 
@@ -12,4 +12,5 @@ router.put('/updatecredentials',protect,updateUser)
 router.put('/resetpassword/:resetToken',resetPassword)
 router.put('/updatepassword',protect,updatePassword)
 router.post('/cart',protect,addToCart)
+router.put('/cart',protect,updateCart)
 export default router;

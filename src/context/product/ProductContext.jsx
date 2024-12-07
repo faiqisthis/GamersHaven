@@ -7,7 +7,8 @@ export const ProductProvider=({children}) => {
     consoles: [],
     games:null,
     accessories:null,
-    loading:true
+    loading:true,
+    upload_loading:false
   }
   const [state,dispatch]=useReducer(productReducer,initalState)
 

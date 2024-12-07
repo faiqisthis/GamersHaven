@@ -16,9 +16,10 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       if (state.token) {
         try {
+          
           const response = await axios.get("http://localhost:8000/api/v1/auth/me", {
             headers: {
-              Authorization: `Bearer ${state.token}`,
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
           });
           userDispatch({

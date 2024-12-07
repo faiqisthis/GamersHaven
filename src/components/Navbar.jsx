@@ -1,7 +1,7 @@
 import { FaGamepad, FaUser } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
-import { logoutUser } from "../context/user/UserActions";
+import { logoutUser,getCurrentUser } from "../context/user/UserActions";
 import UserContext from "../context/user/UserContext";
 function Navbar() {
   const location = useLocation();
@@ -18,7 +18,23 @@ function Navbar() {
       payload: null,
     });
   };
-
+useEffect(() => {
+ const checkUser=async() => {
+    if(localStorage.getItem("authToken") && user===null){
+      try {
+        const response=await getCurrentUser()
+        response&&
+        userDispatch({
+          type: "SET_USER",
+          payload: response.data
+        })
+      } catch (error) {
+        console.log("Error fetching user: ", error)
+      }
+    }
+  }
+  checkUser() 
+},[])
   return (
     <div className="navbar bg-black p-4">
       {/* Wrapper for logo and buttons */}
@@ -60,7 +76,7 @@ function Navbar() {
 
           {!user && location.pathname !== "/signin" && (
             <li>
-              <Link to="/signin" className=" md:text-lg">
+              <Link to='/signin' state={{from:location.pathname}} className=" md:text-lg">
                 Sign-In
               </Link>
             </li>
@@ -77,7 +93,8 @@ function Navbar() {
           <div
             onClick={() => {
               if (!user) {
-                navigate("/signin");
+                navigate("/signin",{state:{from:'/user/cart'}});
+                return
               }
               navigate(`/user/${user._id}/cart`);
             }}

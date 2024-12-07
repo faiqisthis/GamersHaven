@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
   availability:Boolean,
   brand: {
     type: String,
-    required:[true,"Please Enter the Product's brand"],
+    default:true,
   },
   features: {
     type: [String],

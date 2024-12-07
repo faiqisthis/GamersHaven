@@ -4,11 +4,14 @@ import { deleteProduct, getProducts } from "../context/product/ProductActions";
 import { FaTrash,FaEdit } from "react-icons/fa";
 import ProductContext from "../context/product/ProductContext";
 import EditBox from "../components/EditItemBox";
+import AddItemBox from "../components/AddItemBox";
 function ItemList() {
   const { consoles, games, accessories, dispatch, loading } =
     useContext(ProductContext);
 
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [showBox, setShowBox] = useState(false);
+  const[addBox,setAddBox]=useState(false)
 
   useEffect(() => {
     dispatch({
@@ -42,13 +45,15 @@ function ItemList() {
       alert("Product Deleted Successfully!");
     }
   };
-    const [showBox, setShowBox] = useState(false);
   
     const handleEditClick = (item) => {
       setShowBox(true); // Show the box when "Edit" is clicked
       setSelectedProduct(item);
     };
   
+    const handleAddClick=() => {
+      setAddBox(true)
+    }
     
 
   if (loading)
@@ -56,6 +61,7 @@ function ItemList() {
 
     return (
       <div className="overflow-x-auto min-h-screen">
+        <button onClick={handleAddClick} className="btn btn-md btn-primary float-end lg:mt-5 mr-5">Add Product</button>
         <table className="table ">
           {/* head */}
           <thead>
@@ -129,6 +135,11 @@ function ItemList() {
             <div>
               <EditBox showBox={showBox} setShowBox={setShowBox} item={selectedProduct}/>
             </div>
+          )
+        }
+        {
+          addBox&&(
+            <AddItemBox setAddBox={setAddBox} addBox={addBox} />
           )
         }
       </div>

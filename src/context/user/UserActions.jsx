@@ -8,14 +8,20 @@ const user=axios.create({
       'Authorization': localStorage.getItem('authToken')? 'Bearer '+localStorage.getItem('authToken'):null
    }
 })
+export const getCurrentUser=async()=>{
+   const response=await user.get("api/v1/auth/me")
+   if(response){
+      return response.data
+   }
+}
 export const loginUser=async (email,password)=>{
    const credentials={email,password}
   const response=await user.post("/api/v1/auth/login",credentials)
 
-  if(response.data.token){
+  if(response.data.success){
    localStorage.setItem("authToken",response.data.token)
 }
-  return response.data.token;
+  return response.data.success;
 }
 export const registerUser= async (firstName,lastName,email,password)=>{
    const credentials={firstName,lastName,email,password,role:"user"}
@@ -32,6 +38,13 @@ export const addToCart=async(productId,quantity)=>{
       return response.data
    }
 }
+export const updateCart=async(data)=>{
+   const response=await user.put("/api/v1/auth/cart",{data})
+   if(response){
+      return response.data
+   }
+}
+
 export const logoutUser=async()=>{
   localStorage.removeItem("authToken")
   const response=await user.get("/api/v1/auth/logout")

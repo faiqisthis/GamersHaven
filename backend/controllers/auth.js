@@ -25,7 +25,7 @@ export const login = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorResponse("Email and password are required", 400));
   }
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password")
   if (!user) {
     return next(new ErrorResponse("Invalid Credentials", 401));
   }
@@ -47,7 +47,9 @@ export const logout=asyncHandler(async(req,res,next) => {
 
 
 export const getMe = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id).populate({path:'cart.items.productId',
+    select:'name price brand images'
+  });
   res.status(200).json({ success: true, data: user });
 });
 
@@ -152,6 +154,28 @@ export const addToCart=asyncHandler(async(req,res,next)=>{
       user.cart.items.push({productId,quantity})
     }
     await user.save()
-    res.status(201).json({success:true,data:user})
+    const tempuser=await User.findById(id).populate({path:'cart.items.productId',
+    select:'name price brand images '
+  });
+    res.status(201).json({success:true,data:tempuser})
   }
+})
+
+export const updateCart=asyncHandler(async(req,res,next)=>{
+const id=req.user.id
+const {data}=req.body
+const user = await User.findById(id).populate({path:'cart.items.productId',
+  select:'name price brand images'
+});
+
+if(!user){
+  return(next(new ErrorResponse("No user found",401)))
+}
+user.cart.items=data
+await user.save()
+res.status(201).json({
+  success:true,
+  data:null
+})
+
 })

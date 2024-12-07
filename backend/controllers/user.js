@@ -1,6 +1,7 @@
 import User from '../models/Users.js'
 import asyncHandler from '../middleware/async.js'
 import getAdvancedResults from '../middleware/advancedResults.js'
+import { useEffect } from 'react'
 export const getUsers=asyncHandler(async(req,res,next)=>{
 res.status(200).json(res.advancedResults)
 })
@@ -30,7 +31,8 @@ res.status(201).json({success:true,data:{}})
 })
 
 export const createUser=asyncHandler(async(req,res,next)=>{
-    const user=await User.create(req.body)
+    let user=await User.create(req.body)
+    user=await User.findById(user._id).select('-password')
     res.status(200).json({success:true,data:user})
 })
 
