@@ -32,8 +32,6 @@ const CheckoutPage = () => {
       (tempCart = user.cart.items.map((item) => {
         return {
           productId: item.productId._id,
-          name: item.productId.name,
-          price: item.productId.price,
           quantity: item.quantity,
         };
       }));
