@@ -32,10 +32,10 @@ function Hero() {
         {/* Content */}
         <div className="hero-content text-center relative z-10 text-gray-300">
           <div>
-            <h1 className="md:text-6xl font-bold text-3xl">
+            <h1 className="md:text-5xl lg:text-6xl font-bold text-4xl text-primary">
               Level Up Your Gaming Experience!
             </h1>
-            <p className="py-6 text-2xl">
+            <p className="py-6 md:text-2xl text-xl text-secondary-content max-w-[90%] mx-auto">
               Discover the latest games, consoles, and accessories at unbeatable
               prices!
             </p>

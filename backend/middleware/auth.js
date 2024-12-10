@@ -3,10 +3,9 @@ import asyncHandler from "./async.js";
 import User from "../models/Users.js";
 import jwt from "jsonwebtoken";
 
-
-
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
+ 
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")

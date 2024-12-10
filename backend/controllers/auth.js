@@ -1,4 +1,5 @@
 import User from "../models/Users.js";
+import Order from "../models/Orders.js";
 import Product from "../models/Products.js";
 import asyncHandler from "../middleware/async.js";
 import ErrorResponse from "../utils/errorResponse.js";
@@ -119,7 +120,12 @@ export const updatePassword=asyncHandler(async(req,res,next)=>{
     await user.save()
     res.status(201).json({success:true,data:{}})
 })
-
+export const submitOrder=asyncHandler(async(req,res,next) => {
+  const response=await Order.create(req.body)
+  if(response){
+    res.status(200).json({success:true,data:response})
+  }
+})
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   if (process.env.NODE_ENVIRONEMNT === "production") {
@@ -138,28 +144,55 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json({ success: true, token });
 };
 
-export const addToCart=asyncHandler(async(req,res,next)=>{
-  const id=req.user.id
-  const {productId,quantity}=req.body
-  const user=await User.findById(id)
-  const product=await Product.findById(productId)
-  if(!user){
-   return(next(new ErrorResponse("No user found",401)))
+export const addToCart = asyncHandler(async (req, res, next) => {
+  const { id } = req.user; // Destructure `id` directly
+  const { productId, quantity } = req.body;
+
+  // Find the user and the product
+  const user = await User.findById(id);
+  const product = await Product.findById(productId);
+
+  if (!user) {
+    return next(new ErrorResponse("No user found", 401));
   }
-  if(product){
-    const existingItem=user.cart.items.find((item)=>item.productId.toString()===productId)
-    if(existingItem)
-    existingItem.quantity+=quantity
-    else{
-      user.cart.items.push({productId,quantity})
-    }
-    await user.save()
-    const tempuser=await User.findById(id).populate({path:'cart.items.productId',
-    select:'name price brand images '
-  });
-    res.status(201).json({success:true,data:tempuser})
+
+  if (!product) {
+    return next(new ErrorResponse("No product found", 404)); // Handle product not found
   }
-})
+
+  // Ensure user.cart exists and items is an array
+  if (!user.cart) {
+    user.cart = { items: [] }; // Initialize empty cart if not present
+  }
+
+  if (!Array.isArray(user.cart.items)) {
+    user.cart.items = []; // Ensure cart.items is always an array
+  }
+
+  // Find existing item in the cart
+  const existingItem = user.cart.items.find(item => item.productId.toString() === productId);
+
+  if (existingItem) {
+    existingItem.quantity += quantity; // Update quantity
+  } else {
+    user.cart.items.push({ productId, quantity }); // Add new item to cart
+  }
+
+  try {
+    await user.save(); // Save the user with the updated cart
+
+    // Re-fetch the user with populated product details
+    const updatedUser = await User.findById(id).populate({
+      path: 'cart.items.productId',
+      select: 'name price brand images'
+    });
+
+    res.status(200).json({ success: true, data: updatedUser }); // Return updated user
+  } catch (error) {
+    next(error); // Handle errors during save or population
+  }
+});
+
 
 export const updateCart=asyncHandler(async(req,res,next)=>{
 const id=req.user.id

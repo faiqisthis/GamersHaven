@@ -14,6 +14,7 @@ import { UserProvider } from "./context/user/UserContext";
 import { ProductProvider } from "./context/product/ProductContext";
 import { UsersProvider } from "./context/users/UsersContext";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 function App() {
   return (
     <>
@@ -148,6 +149,15 @@ function App() {
                       <Footer />
                     </div>
                   }
+                />
+                <Route
+                exact path='/checkout'
+                element={
+                  <div>
+                    <Checkout/>
+                    <Footer/>
+                  </div>
+                }
                 />
               </Routes>
             </Router>
