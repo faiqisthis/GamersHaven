@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getCurrentUser, submitOrder, updateCart } from "../context/user/UserActions";
 import UserContext from "../context/user/UserContext";
 import OrderSummary from "../components/OrderSummary";
+import OrdersContext from "../context/orders/OrdersContext";
 
 const CheckoutPage = () => {
   const { user, userDispatch } = useContext(UserContext);
+  const {ordersDispatch}=useContext(OrdersContext)
   const [contentShow, setContentShow] = useState(false);
   const [billingAddress, setBillingAddress] = useState("same");
   const [firstName, setFirstName] = useState("");
@@ -112,6 +114,10 @@ const CheckoutPage = () => {
       userDispatch({
         type: "SET_USER",
         payload: newUser
+      })
+      ordersDispatch({
+        type: "ADD_ORDER",
+        payload:data
       })
       const response=await updateCart(newCart)
       if(response.success){

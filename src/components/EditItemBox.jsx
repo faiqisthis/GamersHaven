@@ -139,7 +139,7 @@ function EditItemBox({setShowBox, item }) {
                 color: "#fff",
               }}
             >
-              <FaXmark color="black" size={22} />
+              <FaXmark color="white" size={22} />
             </button>
           </div>
         </div>

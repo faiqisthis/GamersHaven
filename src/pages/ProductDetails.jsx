@@ -90,7 +90,7 @@ function ProductDetails() {
             />
           </div>
         </div>
-        <div className="px-6 lg:ml-7">
+        <div className="px-6 lg:ml-7 lg:min-w-[800px] md:min-w-[600px]">
           <h1 className="text-4xl font-bold md:mt-0 mt-5">{name || ""}</h1>
           <p className="mt-5 lg:w-[70%] w-[90%] text-justify">
             {description || ""}

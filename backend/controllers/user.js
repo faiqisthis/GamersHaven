@@ -1,7 +1,6 @@
 import User from '../models/Users.js'
 import asyncHandler from '../middleware/async.js'
 import getAdvancedResults from '../middleware/advancedResults.js'
-import { useEffect } from 'react'
 export const getUsers=asyncHandler(async(req,res,next)=>{
 res.status(200).json(res.advancedResults)
 })

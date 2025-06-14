@@ -2,6 +2,7 @@ import express from "express";
 import auth from "./routes/auth.js";
 import users from "./routes/users.js";
 import products from'./routes/products.js'
+import orders from './routes/orders.js'
 import logger from "./middleware/logger.js";
 import connectDB from "./db.js";
 import colors from "colors";
@@ -15,6 +16,7 @@ import xss from "xss-clean";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 import cors from  "cors";
+
 
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -68,6 +70,7 @@ app.use(cors())
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users",users)
 app.use("/api/v1/products",products)
+app.use("/api/v1/orders",orders)
 
 
 

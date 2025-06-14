@@ -13,6 +13,7 @@ function Navbar() {
       type: "SET_TOKEN",
       payload: null,
     });
+    
     userDispatch({
       type: "SET_USER",
       payload: null,

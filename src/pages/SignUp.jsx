@@ -7,21 +7,38 @@ import { useNavigate } from "react-router-dom";
 import UsersContext from "../context/users/UsersContext";
 function SignUp() {
   const { userDispatch } = useContext(UserContext);
-  const {usersDispatch}=useContext(UsersContext)
+  const { usersDispatch } = useContext(UsersContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
   const validateSignup = async (e) => {
     e.preventDefault();
-    const token = await registerUser(firstName, lastName, email, password);
-    if (token) {
-      userDispatch({ type: "SET_TOKEN", payload: token });
-      usersDispatch({type:"ADD_USER",payload:{firstName,lastName,email}})
-      navigate('/')
-    }
+    if (validateEmail(email)) {
   
+      if (password.length < 6) {
+        alert("Password must be at least of length 6.");
+        return;
+      }
+      const token = await registerUser(firstName, lastName, email, password);
+      if (token) {
+        userDispatch({ type: "SET_TOKEN", payload: token });
+        usersDispatch({
+          type: "ADD_USER",
+          payload: { firstName, lastName, email },
+        });
+        navigate("/");
+      }
+    } else {
+    
+      alert("Invalid Email Entered");
+      return;
+    }
   };
 
   return (

@@ -4,10 +4,10 @@ import Product from "../models/Products.js";
 import asyncHandler from "../middleware/async.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
-import crypto from 'crypto'
+import crypto from "crypto";
 export const registerUser = asyncHandler(async (req, res, next) => {
-  console.log(req.body)
-  const { firstName,lastName, email, password, role } = req.body;
+  console.log(req.body);
+  const { firstName, lastName, email, password, role } = req.body;
   const user = await User.create({
     firstName,
     lastName,
@@ -15,8 +15,8 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     password,
     role,
   });
-  if(!user){
-    return next(new ErrorResponse('User not created', 400))
+  if (!user) {
+    return next(new ErrorResponse("User not created", 400));
   }
   sendTokenResponse(user, 200, res);
 });
@@ -26,7 +26,7 @@ export const login = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorResponse("Email and password are required", 400));
   }
-  const user = await User.findOne({ email }).select("+password")
+  const user = await User.findOne({ email }).select("+password");
   if (!user) {
     return next(new ErrorResponse("Invalid Credentials", 401));
   }
@@ -38,37 +38,42 @@ export const login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-export const logout=asyncHandler(async(req,res,next) => {
-  res.cookie('token','none',{
-    expires:new Date(Date.now()+10*1000),
-    httpOnly:true
-  })
-  res.status(200).json({success:true,data:{}})
-})
-
+export const logout = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000), // Cookie will expire in 10 seconds
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Secure cookie in production
+    sameSite: "Strict", // Prevent CSRF
+  });
+});
 
 export const getMe = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id).populate({path:'cart.items.productId',
-    select:'name price brand images'
+  const user = await User.findById(req.user.id).populate({
+    path: "cart.items.productId",
+    select: "name price brand images",
   });
   res.status(200).json({ success: true, data: user });
 });
 
-export const resetPassword=asyncHandler(async (req,res,next)=>{
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
 
-    
-    const resetPasswordToken=crypto.createHash('sha256').update(req.params.resetToken).digest('hex')
-
-    const user=await User.findOne({resetPasswordToken, resetPasswordExpire:{$gt: Date.now()}})
-    if(!user){
-        return next(new ErrorResponse('Invalid token',400))
-    }
-    user.password=req.body.password
-    user.resetPasswordToken=undefined
-    user.resetPasswordExpire=undefined
-    await user.save()
-   sendTokenResponse(user,200,res)
-})
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new ErrorResponse("Invalid token", 400));
+  }
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+  sendTokenResponse(user, 200, res);
+});
 
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -96,36 +101,69 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const updateUser=asyncHandler(async(req,res,next)=>{
-    const fieldsToUpdate={
-        name:req.body.name,
-        email:req.body.email
-    }
-    const user=await User.findByIdAndUpdate(req.user.id,fieldsToUpdate)
-    if(!user){
-        return next(new ErrorResponse('User not found',404))
-    }
-    res.status(201).json({success:true,data:{}})
-})
-export const updatePassword=asyncHandler(async(req,res,next)=>{
-    const user=await User.findById(req.user).select('+password')
-    if(!user){
-        return next(new ErrorResponse('User not found',404))
-    }
-    const isMatch=await user.matchPassword(req.body.currentPassword)
-    if(!isMatch){
-        return next(new ErrorResponse('Wrong password',401))
-    }
-    user.password=req.body.newPassword
-    await user.save()
-    res.status(201).json({success:true,data:{}})
-})
-export const submitOrder=asyncHandler(async(req,res,next) => {
-  const response=await Order.create(req.body)
-  if(response){
-    res.status(200).json({success:true,data:response})
+export const updateUser = asyncHandler(async (req, res, next) => {
+  const fieldsToUpdate = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+  const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate);
+  if (!user) {
+    return next(new ErrorResponse("User not found", 404));
   }
-})
+  res.status(201).json({ success: true, data: {} });
+});
+export const updatePassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user).select("+password");
+  if (!user) {
+    return next(new ErrorResponse("User not found", 404));
+  }
+  const isMatch = await user.matchPassword(req.body.currentPassword);
+  if (!isMatch) {
+    return next(new ErrorResponse("Wrong password", 401));
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  res.status(201).json({ success: true, data: {} });
+});
+export const submitOrder = asyncHandler(async (req, res, next) => {
+  const {cart} = req.body;
+
+  if (!cart || !Array.isArray(cart.items) || cart.items.length === 0) {
+    return res.status(400).json({ success: false, message: "Cart is empty." });
+  }
+
+  // Validate and update stock
+  try {
+    // Prepare bulk write operations for stock updates
+    const bulkUpdates = cart.items.map((item) => ({
+      updateOne: {
+        filter: { _id: item.productId, stock: { $gte: item.quantity } }, // Ensure sufficient stock
+        update: { $inc: { stock: -item.quantity } },
+      },
+    }));
+
+    // Execute bulk updates
+    const stockUpdateResult = await Product.bulkWrite(bulkUpdates);
+
+    // Check if all updates were successful
+    if (stockUpdateResult.matchedCount !== cart.items.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Some items in the cart are out of stock.",
+      });
+    }
+
+    const order = await Order.create(req.body);
+
+    return res.status(200).json({ success: true, data: order });
+  } catch (error) {
+    console.error("Error processing order:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to process the order. Please try again.",
+    });
+  }
+});
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   if (process.env.NODE_ENVIRONEMNT === "production") {
@@ -170,7 +208,9 @@ export const addToCart = asyncHandler(async (req, res, next) => {
   }
 
   // Find existing item in the cart
-  const existingItem = user.cart.items.find(item => item.productId.toString() === productId);
+  const existingItem = user.cart.items.find(
+    (item) => item.productId.toString() === productId
+  );
 
   if (existingItem) {
     existingItem.quantity += quantity; // Update quantity
@@ -183,8 +223,8 @@ export const addToCart = asyncHandler(async (req, res, next) => {
 
     // Re-fetch the user with populated product details
     const updatedUser = await User.findById(id).populate({
-      path: 'cart.items.productId',
-      select: 'name price brand images'
+      path: "cart.items.productId",
+      select: "name price brand images",
     });
 
     res.status(200).json({ success: true, data: updatedUser }); // Return updated user
@@ -193,22 +233,21 @@ export const addToCart = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const updateCart = asyncHandler(async (req, res, next) => {
+  const id = req.user.id;
+  const { data } = req.body;
+  const user = await User.findById(id).populate({
+    path: "cart.items.productId",
+    select: "name price brand images",
+  });
 
-export const updateCart=asyncHandler(async(req,res,next)=>{
-const id=req.user.id
-const {data}=req.body
-const user = await User.findById(id).populate({path:'cart.items.productId',
-  select:'name price brand images'
+  if (!user) {
+    return next(new ErrorResponse("No user found", 401));
+  }
+  user.cart.items = data;
+  await user.save();
+  res.status(201).json({
+    success: true,
+    data: null,
+  });
 });
-
-if(!user){
-  return(next(new ErrorResponse("No user found",401)))
-}
-user.cart.items=data
-await user.save()
-res.status(201).json({
-  success:true,
-  data:null
-})
-
-})

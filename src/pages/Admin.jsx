@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UserList from "./UserList";
 import { FaBars } from "react-icons/fa";
 import UserContext from "../context/user/UserContext";
+import OrderList from "./OrderList";
 
 function Admin() {
   const { user } = useContext(UserContext);
@@ -41,6 +42,7 @@ function Admin() {
         {location.pathname === '/admin/dashboard' && <Stats />}
         {location.pathname === '/admin/products' && <ItemList />}
         {location.pathname === '/admin/users' && <UserList />}
+        {location.pathname==='/admin/orders'&& <OrderList/>}
       </div>
       <div className="drawer-side">
         <label
@@ -61,6 +63,9 @@ function Admin() {
             </li>
             <li>
               <button onClick={() => handleNavigate('/admin/products')}>Products</button>
+            </li>
+            <li>
+              <button onClick={()=>handleNavigate('/admin/orders')}>Orders</button>
             </li>
           </div>
         </ul>
