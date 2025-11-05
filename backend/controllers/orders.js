@@ -101,6 +101,15 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   const order = await Order.create(orderPayload);
   return res.status(201).json({ success: true, data: order });
 });
+
+// GET /api/v1/orders/my - get orders for current user
+export const getMyOrders = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+  const orders = await Order.find({ userId })
+    .populate({ path: 'cart.items.productId', select: 'name price brand images slug' })
+    .sort({ createdAt: -1 });
+  return res.status(200).json({ success: true, count: orders.length, data: orders });
+});
 export const updateOrder=asyncHandler(async (req,res,next)=>{
     const order =await Order.findByIdAndUpdate(req.params.id,req.body)
     if(order){

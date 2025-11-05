@@ -155,6 +155,9 @@ useEffect(() => {
               {user && (
                 <>
                   <li>
+                    <Link to="/my-orders">My Orders</Link>
+                  </li>
+                  <li>
                     <a>Settings</a>
                   </li>
                   <li>

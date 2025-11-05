@@ -159,7 +159,7 @@ const CheckoutPage = () => {
       // amount in cents
       const amountCents = Math.round(subtotal * 100);
 
-      const resp = await fetch("http://localhost:8000/api/v1/stripe/create-payment-intent", {
+      const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/stripe/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amountCents, currency: "usd" }),

@@ -16,6 +16,7 @@ import { UsersProvider } from "./context/users/UsersContext";
 import { OrdersProvider } from "./context/orders/OrdersContext";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import MyOrders from "./pages/MyOrders";
 function App() {
   return (
     <>
@@ -167,6 +168,17 @@ function App() {
                     element={
                       <div>
                         <Checkout />
+                        <Footer />
+                      </div>
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/my-orders"
+                    element={
+                      <div>
+                        <Navbar />
+                        <MyOrders />
                         <Footer />
                       </div>
                     }

@@ -37,3 +37,18 @@ export const createOrder = async (dispatch, payload) => {
     }
 }
 
+// Get current user's orders
+export const getMyOrders = async (dispatch) => {
+    try {
+        const response = await orders.get('/api/v1/orders/my');
+        if (response?.data?.success) {
+            dispatch && dispatch({ type: 'SET_ORDERS', payload: response.data.data });
+            return response.data;
+        }
+        return { success: false };
+    } catch (error) {
+        console.log('Error while fetching my orders:', error);
+        return { success: false, error: error?.response?.data || error.message };
+    }
+}
+
