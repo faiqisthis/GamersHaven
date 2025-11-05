@@ -2,10 +2,17 @@ import React, { useContext, useState, useEffect } from "react";
 import { FaGamepad, FaShoppingBag } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { getCurrentUser, submitOrder, updateCart } from "../context/user/UserActions";
+import { getCurrentUser, updateCart } from "../context/user/UserActions";
+import { createOrder } from "../context/orders/OrdersActions";
 import UserContext from "../context/user/UserContext";
 import OrderSummary from "../components/OrderSummary";
 import OrdersContext from "../context/orders/OrdersContext";
+
+// Stripe imports
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 
 const CheckoutPage = () => {
   const { user, userDispatch } = useContext(UserContext);
@@ -27,26 +34,28 @@ const CheckoutPage = () => {
   const [cart, setCart] = useState(user?.cart?.items);
   const [email, setEmail] = useState(user?.email);
   const [userId, setUserId] = useState(user?._id);
-  const navigate=useNavigate()
+  const [paymentMethod, setPaymentMethod] = useState("cod"); // 'cod' or 'card'
+  const navigate = useNavigate();
   let tempCart;
+
+  // Calculate subtotal (moved above useEffect that uses it)
+  const subtotal = parseFloat(
+    (user?.cart?.items?.reduce((acc, item) => acc + item.productId.price * item.quantity, 0) || 0).toFixed(2)
+  );
+
   useEffect(() => {
-    user?.cart &&
-      (tempCart = user.cart.items.map((item) => {
-        return {
-          productId: item.productId._id,
-          quantity: item.quantity,
-        };
+    if (user?.cart?.items) {
+      const items = user.cart.items.map((item) => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
       }));
-    setCart({
-      items: tempCart,
-      subtotal,
-    });
-
+      setCart({ items, subtotal });
+    }
     user?.email && setEmail(user.email);
-    user?.id && setUserId(user._id);
-  }, [user?.cart, user?.email, user?.id]);
+    user?._id && setUserId(user._id);
+  }, [user]);
 
-  const handleCheckoutSubmit = async () => {
+  const validateForms = () => {
     if (
       firstName.trim() === "" ||
       lastName.trim() === "" ||
@@ -56,9 +65,9 @@ const CheckoutPage = () => {
       phone.trim() === ""
     ) {
       alert("Please fill all the required fields in Contact Form");
-    
-      return;
-    } else if (billingAddress === "different") {
+      return false;
+    }
+    if (billingAddress === "different") {
       if (
         fullName.trim() === "" ||
         billingaddress.trim() === "" ||
@@ -67,18 +76,22 @@ const CheckoutPage = () => {
         billingPhone.trim() === ""
       ) {
         alert("Please fill all the required fields in Billing Form");
-        
-        return;
+        return false;
       }
-    } else if (cart === null || cart === undefined) {
-      alert("Your cart is empty");
-      
-      return;
     }
+    if (cart === null || cart === undefined || !cart.items || cart.items.length === 0) {
+      alert("Your cart is empty");
+      return false;
+    }
+    return true;
+  };
 
-    // Construct the data object
+  // existing COD flow (slightly refactored)
+  const handleCODSubmit = async () => {
+    if (!validateForms()) return;
+
     const data = {
-      userId,
+      userId, // will be overridden by backend from auth
       firstName,
       lastName,
       apartment,
@@ -89,6 +102,9 @@ const CheckoutPage = () => {
       email,
       subtotal,
       cart,
+      paymentMethod: "cod",
+      paymentStatus: "pending",
+      paymentProvider: "cod",
       ...(billingAddress === "different" && {
         billingAddress: {
           fullName,
@@ -101,35 +117,179 @@ const CheckoutPage = () => {
       }),
     };
 
-    const response=await submitOrder(data)
-    if(response.success){
-      let newCart=user.cart.items
-      newCart=newCart.filter(item=> !cart.items.some((orderedItem) => orderedItem.productId === item.productId._id))
-      const newUser={
+    const response = await createOrder(ordersDispatch, data);
+    if (response.success) {
+      let newCart = user.cart.items;
+      newCart = newCart.filter((item) => !cart.items.some((orderedItem) => orderedItem.productId === item.productId._id));
+      const newUser = {
         ...user,
-        cart:{
-          items:newCart
-        }
-      }
+        cart: {
+          items: newCart,
+        },
+      };
       userDispatch({
         type: "SET_USER",
-        payload: newUser
-      })
-      ordersDispatch({
-        type: "ADD_ORDER",
-        payload:data
-      })
-      const response=await updateCart(newCart)
-      if(response.success){
+        payload: newUser,
+      });
+      const updateResp = await updateCart(newCart);
+      if (updateResp.success) {
         alert("Order submitted successfully");
-        navigate('/')
+        navigate("/");
       }
+    } else {
+      alert("Failed to submit order");
     }
   };
+
+  // Card payment form component (uses Stripe Elements)
+  function CardPaymentForm() {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [status, setStatus] = useState("");
+
+    const handleCardPayment = async (e) => {
+      e.preventDefault();
+      if (!validateForms()) return;
+      if (!stripe || !elements) {
+        setStatus("Stripe not loaded");
+        return;
+      }
+      setStatus("Creating payment intent...");
+
+      // amount in cents
+      const amountCents = Math.round(subtotal * 100);
+
+      const resp = await fetch("http://localhost:8000/api/v1/stripe/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: amountCents, currency: "usd" }),
+      });
+
+      const data = await resp.json();
+
+      // if server returned a mock response (dev), treat as success
+      const clientSecret = data?.clientSecret;
+      if (!clientSecret) {
+        setStatus(data?.error || "Failed to create payment intent");
+        return;
+      }
+
+      let paymentIntentId = undefined;
+      let finalStatus = undefined;
+      let provider = undefined;
+
+      if (data.mock || clientSecret === "mock_client_secret") {
+        setStatus("Mock payment succeeded (dev)");
+        provider = 'mock';
+        finalStatus = 'succeeded';
+        paymentIntentId = 'mock_intent';
+      } else {
+        setStatus("Confirming card...");
+        const card = elements.getElement(CardElement);
+        const result = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: { card },
+        });
+
+        if (result.error) {
+          setStatus(result.error.message);
+          return;
+        }
+        if (result.paymentIntent?.status !== "succeeded") {
+          setStatus("Payment not completed: " + result.paymentIntent?.status);
+          return;
+        }
+        setStatus("Payment succeeded");
+        provider = 'stripe';
+        finalStatus = result.paymentIntent?.status;
+        paymentIntentId = result.paymentIntent?.id;
+      }
+
+      // build order payload and submit
+      const orderData = {
+        userId, // backend will use auth id
+        firstName,
+        lastName,
+        apartment,
+        nearestLandmark,
+        city,
+        postalCode,
+        phone,
+        email,
+        subtotal,
+        cart,
+        paymentMethod: "card",
+        paymentStatus: finalStatus || 'succeeded',
+        paymentReference: paymentIntentId,
+        paymentProvider: provider || 'stripe',
+        paidAt: finalStatus === 'succeeded' ? new Date().toISOString() : undefined,
+        ...(billingAddress === "different" && {
+          billingAddress: {
+            fullName,
+            address: billingaddress,
+            city: billingCity,
+            postalCode: billingPostalCode,
+            phone: billingPhone,
+            email,
+          },
+        }),
+      };
+
+      const response = await createOrder(ordersDispatch, orderData);
+      if (response.success) {
+        let newCart = user.cart.items;
+        newCart = newCart.filter((item) => !cart.items.some((orderedItem) => orderedItem.productId === item.productId._id));
+        const newUser = {
+          ...user,
+          cart: {
+            items: newCart,
+          },
+        };
+        userDispatch({
+          type: "SET_USER",
+          payload: newUser,
+        });
+        const updateResp = await updateCart(newCart);
+        if (updateResp.success) {
+          alert("Order submitted successfully");
+          navigate("/");
+        }
+      } else {
+        alert("Failed to submit order");
+      }
+    };
+
+    return (
+      <form onSubmit={handleCardPayment} className="space-y-4">
+        <div className="p-4 border rounded-md">
+          <CardElement
+            options={{
+              hidePostalCode: true,
+              style: {
+                base: {
+                  color: "#ffffff",
+                  fontSize: "16px",
+                  "::placeholder": { color: "#bfbfbf" },
+                  iconColor: "#ffffff",
+                },
+                invalid: {
+                  color: "#ff4d4f",
+                },
+              },
+            }}
+          />
+        </div>
+        <div>{status}</div>
+        <button type="submit" className="w-full mt-2 btn btn-primary text-black py-3 rounded-md" disabled={!stripe}>
+          Pay {subtotal ? `$${subtotal}` : ""}
+        </button>
+      </form>
+    );
+  }
 
   const handleBillingChange = (e) => {
     setBillingAddress(e.target.value);
   };
+
   useEffect(() => {
     const checkUser = async () => {
       if (localStorage.getItem("authToken") && user === null) {
@@ -146,14 +306,8 @@ const CheckoutPage = () => {
       }
     };
     checkUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Calculate subtotal
-  const subtotal = parseFloat(
-    user?.cart?.items
-      .reduce((acc, item) => acc + item.productId.price * item.quantity, 0)
-      .toFixed(2)
-  );
 
   return (
     <div className="min-h-screen">
@@ -182,9 +336,7 @@ const CheckoutPage = () => {
           <div className="space-y-4">
             {/* Delivery Address */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Delivery Address
-              </label>
+              <label className="block text-sm font-medium mb-1">Delivery Address</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
@@ -251,9 +403,21 @@ const CheckoutPage = () => {
                   name="payment"
                   value="cod"
                   className="mr-2"
-                  defaultChecked
+                  checked={paymentMethod === "cod"}
+                  onChange={() => setPaymentMethod("cod")}
                 />
                 Cash on Delivery (COD)
+              </label>
+              <label className="block bg-black p-3 rounded-md shadow-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="card"
+                  className="mr-2"
+                  checked={paymentMethod === "card"}
+                  onChange={() => setPaymentMethod("card")}
+                />
+                Pay with Card
               </label>
             </div>
 
@@ -338,42 +502,34 @@ const CheckoutPage = () => {
                 )}
               </AnimatePresence>
             </div>
-            <button
-              onClick={handleCheckoutSubmit}
-              className="w-full mt-6 btn btn-primary  text-black py-3 rounded-md"
-            >
-              Pay now
-            </button>
+
+            {/* Payment UI: show card form when card selected, otherwise COD button */}
+            {paymentMethod === "card" ? (
+              <Elements stripe={stripePromise}>
+                <CardPaymentForm />
+              </Elements>
+            ) : (
+              <button onClick={handleCODSubmit} className="w-full mt-6 btn btn-primary  text-black py-3 rounded-md">
+                Pay now
+              </button>
+            )}
           </div>
         </div>
 
         {/* Collapsible Order Summary for Mobile */}
-        <div
-          onClick={() => setContentShow(!contentShow)}
-          className="collapse collapse-arrow bg-base-200 md:hidden"
-        >
+        <div onClick={() => setContentShow(!contentShow)} className="collapse collapse-arrow bg-base-200 md:hidden">
           <input type="checkbox" />
           <div className="collapse-title text-xl font-medium">
-            {!contentShow
-              ? "Click to View Order Summary"
-              : "Click to Hide Order Summary"}
+            {!contentShow ? "Click to View Order Summary" : "Click to Hide Order Summary"}
           </div>
           <div className="collapse-content">
-            {contentShow && (
-              <OrderSummary
-                cartItems={user?.cart?.items || []}
-                subtotal={`$ ${subtotal}`}
-              />
-            )}
+            {contentShow && <OrderSummary cartItems={user?.cart?.items || []} subtotal={`$ ${subtotal}`} />}
           </div>
         </div>
 
         {/* Order Summary for Desktop */}
         <div className="hidden md:block w-full md:w-1/2">
-          <OrderSummary
-            cartItems={user?.cart?.items || []}
-            subtotal={`$ ${subtotal}`}
-          />
+          <OrderSummary cartItems={user?.cart?.items || []} subtotal={`$ ${subtotal}`} />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import auth from "./routes/auth.js";
 import users from "./routes/users.js";
 import products from'./routes/products.js'
 import orders from './routes/orders.js'
+import stripeRouter from './routes/stripe.js'
 import logger from "./middleware/logger.js";
 import connectDB from "./db.js";
 import colors from "colors";
@@ -71,7 +72,7 @@ app.use("/api/v1/auth", auth);
 app.use("/api/v1/users",users)
 app.use("/api/v1/products",products)
 app.use("/api/v1/orders",orders)
-
+app.use('/api/v1/stripe', stripeRouter);
 
 
 //Check for Errors

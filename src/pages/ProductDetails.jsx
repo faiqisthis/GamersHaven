@@ -11,31 +11,24 @@ function ProductDetails() {
   const { id } = useParams(); // Get product ID from URL
   const { loading, dispatch } = useContext(ProductContext);
   const [quantity, setQuantity] = useState(1);
-  const {user,userDispatch}=useContext(UserContext)
-  const navigate=useNavigate()
-  const location=useLocation()
+  const { user, userDispatch } = useContext(UserContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    dispatch({
-      type: "SET_LOADING",
-      payload: true,
-    });
+    dispatch({ type: "SET_LOADING", payload: true });
     const fetchProduct = async (id) => {
       try {
         const response = await getProduct(id);
-        setProduct(response.data.data); // Set the product data
+        setProduct(response.data.data);
       } catch (error) {
         console.error("Failed to fetch product:", error);
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
       }
     };
-
     fetchProduct(id);
-    dispatch({
-      type: "SET_LOADING",
-      payload: false,
-    });
-    
-  }, [id,user]);
+  }, [id]);
 
   const { name, price, description, features, images } = product || {};
 
@@ -48,17 +41,15 @@ function ProductDetails() {
 
   const handleCartAddition = async () => {
     const productId = id;
-    if(user){
-      const response =await addToCart(productId,quantity)
-      if(response){
-        userDispatch({type:"SET_CART",payload:response.data})
-        alert("Added to Cart Successfully")
+    if (user) {
+      const response = await addToCart(productId, quantity);
+      if (response) {
+        userDispatch({ type: "SET_CART", payload: response.data });
+        alert("Added to Cart Successfully");
       }
+    } else {
+      navigate("/signin", { state: { from: location.pathname } });
     }
-    else{
-      navigate('/signin',{state:{from:location.pathname}})
-    }
-  
   };
 
   if (loading)
@@ -99,7 +90,7 @@ function ProductDetails() {
           <hr className="mt-4 border-t-2 border-gray-400" />
           <div className="flex">
             <button
-              onClick={() => handleCartAddition(id)}
+              onClick={handleCartAddition}
               className="mt-5 btn btn-secondary btn-md w-[30%] btn-circle"
             >
               Add to Cart

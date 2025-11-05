@@ -9,9 +9,13 @@ const OrderSummary = ({ cartItems, subtotal }) => {
           <div key={item.productId._id} className="flex justify-between">
             <div>
               <p className="text-sm font-medium">{item.productId.name}</p>
-              <p className="text-xs text-gray-500">{item.productId.brand}</p>
+              <p className="text-xs text-gray-500">
+                {item.productId.brand} • Qty: {item.quantity}
+              </p>
             </div>
-            <p className="text-sm">{item.productId.price}</p>
+            <p className="text-sm">
+              ${(item.productId.price * item.quantity).toFixed(2)}
+            </p>
           </div>
         ))}
       </div>

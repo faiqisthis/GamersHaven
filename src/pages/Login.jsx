@@ -18,6 +18,9 @@ function Login() {
           navigate(`/user/${user._id}/cart`);
         }
       }
+      if(user){
+        navigate("/");
+      }
   },[user])
 
   const validateUser = async (e) => {

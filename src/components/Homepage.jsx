@@ -13,9 +13,9 @@ function Hero() {
  
   return (
     <>
-      <div className="hero relative min-h-screen">
+      <div className=" relative p-[40px] min-h-screen flex max-w-[1440px] mx-auto">
         {/* Background Image Div */}
-        <div
+        {/* <div
           style={{
             backgroundImage: `url(${HeroBackground})`,
             backgroundSize: "cover",
@@ -27,26 +27,30 @@ function Hero() {
             zIndex: -1,
             opacity: 0.6, // Set opacity for the background image
           }}
-        ></div>
+        ></div> */}
 
         {/* Content */}
-        <div className="hero-content text-center relative z-10 text-gray-300">
+        <div className="hero-content  text-gray-300 w-1/2">
           <div>
-            <h1 className="md:text-5xl lg:text-6xl font-bold text-4xl text-primary">
+            <h1 className="md:text-5xl lg:text-[48px] font-bold text-4xl text-primary">
               Level Up Your Gaming Experience!
             </h1>
-            <p className="py-6 md:text-2xl text-xl text-secondary-content max-w-[90%] mx-auto">
+            <p className="py-6  text-[20px] text-secondary-content ">
               Discover the latest games, consoles, and accessories at unbeatable
               prices!
             </p>
             <Link
               to="/explore"
-              className="btn btn-lg btn-primary transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+              className="bg-black px-[20px] py-[14px] rounded-[12px]  transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
             >
               Shop Now
             </Link>
           </div>
         </div>
+        <img
+        src={HeroBackground}
+        className="w-1/2 object-cover rounded-[12px] "
+        />
       </div>
     </>
   );

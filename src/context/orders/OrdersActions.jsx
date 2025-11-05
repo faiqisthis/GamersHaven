@@ -21,3 +21,19 @@ export const deleteOrder=async(id)=>{
     }
 }
 
+// Create an order (user-facing)
+export const createOrder = async (dispatch, payload) => {
+    try {
+        const response = await orders.post('/api/v1/orders', payload);
+        if (response?.data?.success) {
+            // Dispatch newly created order to state
+            dispatch && dispatch({ type: 'ADD_ORDER', payload: response.data.data });
+            return response.data;
+        }
+        return { success: false };
+    } catch (error) {
+        console.log('Error while creating order:', error);
+        return { success: false, error: error?.response?.data || error.message };
+    }
+}
+
