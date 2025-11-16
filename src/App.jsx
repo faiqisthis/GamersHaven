@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Homepage from "./components/Homepage";
+import Homepage from "./components/Hero";
 import Footer from "./components/Footer";
 import Explore from "./pages/Explore";
 import About from "./pages/About";
@@ -17,6 +17,8 @@ import { OrdersProvider } from "./context/orders/OrdersContext";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
+import Features from "./components/Features";
+import CTA from "./components/CTA";
 function App() {
   return (
     <>
@@ -33,6 +35,8 @@ function App() {
                       <div>
                         <Navbar />
                         <Homepage />
+                        <Features/>
+                        <CTA/>
                         <Footer />
                       </div>
                     }

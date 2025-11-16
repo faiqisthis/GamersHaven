@@ -60,7 +60,7 @@ function ItemList() {
     return <span className="loading loading-spinner loading-lg"></span>;
 
     return (
-      <div className="overflow-x-auto min-h-screen">
+      <div className="overflow-x-auto min-h-screen ">
         <button onClick={handleAddClick} className="btn btn-md btn-primary float-end lg:mt-5 mr-5">Add Product</button>
         <table className="table ">
           {/* head */}

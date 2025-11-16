@@ -31,7 +31,9 @@ function Explore() {
   )
   return (
     <>
-      <div className="relative min-h-screen">
+    <div className="bg-white">
+
+      <div className="relative min-h-screen max-w-[1440px] p-[64px] ">
         {/* Background Image Div */}
         {/* <div
           style={{
@@ -44,11 +46,11 @@ function Explore() {
             height: '100%',
             zIndex: -1,
             opacity: 0.2, // Set opacity for the background image
-          }}
-        ></div> */}
+            }}
+            ></div> */}
 
         {/* Content */}
-        <hr className="border-t-2 border-gray-700 relative z-10" />
+   
 
         <div className=" w-full min-h-screen pt-5 relative z-10">
           <div>
@@ -58,14 +60,14 @@ function Explore() {
           </div>
 
           {/* Grid layout for consoles */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 p-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {
-                consoles.map((console) => (
-                  <>
+              consoles.map((console) => (
+                <>
                   <Card key={console.id} console={console} />
                   </>
                 ))
-            }
+              }
             
           </div>
 
@@ -74,7 +76,7 @@ function Explore() {
           </h1>
 
           {/* Grid layout for games */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 p-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card /> <Card /> <Card /> <Card />
           </div>
 
@@ -83,11 +85,12 @@ function Explore() {
           </h1>
 
           {/* Grid layout for accessories */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 p-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card /> <Card /> <Card /> <Card />
           </div>
         </div>
       </div>
+              </div>
     </>
   );
 }

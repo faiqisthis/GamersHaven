@@ -1,19 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function Card({key,console}) {
-  const { name, price,_id,slug,images } = console || {}; 
+import { Star } from "lucide-react";
+function Card({ key, console }) {
+  const { name, price, _id, slug, images } = console || {};
   return (
-    <div id={key} className="card w-[260px]  flex-shrink-0 bg-base-100 mx-auto md:w-64 mt-3 shadow-xl hover:shadow-slate-400 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-      <figure className="h-[200px] w-full flex items-center justify-center overflow-hidden">
-        <img className="object-contain h-full w-full" src={images ? images[0]:""} alt="" />
-      </figure>
-      <div className="card-body">
-        <div className="flex justify-between h-[100px]">
-          <h2 className="card-title">{name||""}</h2>
-          <h2 className="card-title">${price || ""}</h2>
+    <div
+      key={key}
+      className="bg-[#fefae0] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer group border-2 border-[#dda15e] hover:border-[#bc6c25]"
+    >
+      <div className="relative h-64 overflow-hidden bg-[#283618]">
+        <img
+          src={images ? images[0] : ""}
+          alt={name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        <div className="absolute top-4 right-4 bg-[#dda15e] text-[#283618] px-3 py-1 rounded-full flex items-center gap-1">
+          <Star className="w-4 h-4 fill-current" />
+          {/* <span>{product.rating}</span> */}
+          <span>4.5</span>
         </div>
-        <div className="card-actions justify-center mt-2 ">
-          <Link to={`/product/${slug||""}/${_id||""}`} className="btn btn-md w-full btn-primary">Buy</Link>
+      </div>
+
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-xl text-[#283618] group-hover:text-[#bc6c25] transition-colors">
+            {name}
+          </h3>
+          <span className="text-2xl text-[#bc6c25]">${price}</span>
         </div>
       </div>
     </div>

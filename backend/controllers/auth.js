@@ -6,7 +6,6 @@ import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
 export const registerUser = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
   const { firstName, lastName, email, password, role } = req.body;
   const user = await User.create({
     firstName,
