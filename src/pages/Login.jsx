@@ -4,24 +4,26 @@ import UserContext from "../context/user/UserContext";
 import { loginUser } from "../context/user/UserActions";
 import { useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Lock, Mail, User, Github } from "lucide-react";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 function Login() {
-  const { user,userDispatch } = useContext(UserContext);
+  const { user, userDispatch } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const fromPage=location.state?.from ||"None"
+  const fromPage = location.state?.from || "None";
 
   useEffect(() => {
-      if(fromPage==='/user/cart'){
-        if(user){
-          navigate(`/user/${user._id}/cart`);
-        }
+    if (fromPage === "/user/cart") {
+      if (user) {
+        navigate(`/user/${user._id}/cart`);
       }
-      if(user){
-        navigate("/");
-      }
-  },[user])
+    }
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
 
   const validateUser = async (e) => {
     e.preventDefault();
@@ -32,60 +34,104 @@ function Login() {
         type: "SET_TOKEN",
         payload: token,
       });
-      if(fromPage!=='/user/cart'){
-        navigate(fromPage)
+      if (fromPage !== "/user/cart") {
+        navigate(fromPage);
       }
     }
   };
 
   return (
-    <div className="hero bg-gray-900 min-h-screen">
-      <div className="hero-content flex-col ">
-        <div className="card bg-base-100 md:w-[500px] max-w-md shrink-0 shadow-2xl">
+    <div className="hero bg-white min-h-screen ">
+      <div className="hero-content flex-col max-w-[1440px] ">
+        <div className="card bg-white md:w-[500px] max-w-md shrink-0 shadow-xl border">
           <form className="card-body">
-            <div className="form-control">
+            <div className="space-y-2">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text text-black font-semibold text-[16px]">
+                  Email Address
+                </span>
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="email"
-                className="input input-bordered mb-5 input-primary"
-                required
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground text-black" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="john.doe@example.com"
+                  className="input bg-white w-full pl-10 focus:border-black focus:ring-0"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="label">
+                  <span className="label-text text-black font-semibold text-[16px]">
+                    Password
+                  </span>
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground text-black" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="input bg-white w-full pl-10 focus:border-black focus:ring-0"
+                    required
+                  />
+                </div>
+              </div>
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="password"
-                className="input input-bordered input-primary"
-                required
-              />
-            </div>
+
             <div className="form-control mt-6">
-              <button
-                className="btn btn-primary"
-                onClick={(e) => validateUser(e)}
-              >
+              <button className="btn " onClick={(e) => validateUser(e)}>
                 Login
               </button>
             </div>
           </form>
+
+          <div className="flex items-center gap-4 px-3 py-2">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <p className="text-gray-400 whitespace-nowrap text-[16px]">or Continue With</p>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3  p-3 mb-3">
+            {/* Google */}
+            <button
+              className="group flex items-center justify-center gap-2 rounded-lg py-2
+  hover:border-black transition"
+            >
+              <FaGoogle
+                size={20}
+                className="text-gray-400 group-hover:text-black transition"
+              />
+              <span className="text-gray-400 group-hover:text-black transition">
+                Google
+              </span>
+            </button>
+
+            {/* Facebook */}
+            <button
+              className="group flex items-center justify-center gap-2 rounded-lg py-2
+  hover:border-black transition"
+            >
+              <FaFacebook
+                size={20}
+                className="text-gray-400 group-hover:text-black transition"
+              />
+              <span className="text-gray-400 group-hover:text-black transition">
+                Facebook
+              </span>
+            </button>
+          </div>
         </div>
-        <p>
-          New to the Website?
-          <br />
+        <div className="flex gap-[6px] flex-row mt-[10px] ">
+          <p className="text-gray-600">New to the Website?</p>
+
           <Link to="/signup">
-            <p className="text-center">Sign-Up</p>
+            <p className="text-center text-black">Sign-Up</p>
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
