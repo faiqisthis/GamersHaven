@@ -42,8 +42,8 @@ function Login() {
 
   return (
     <div className="hero bg-white min-h-screen ">
-      <div className="hero-content flex-col max-w-[1440px] ">
-        <div className="card bg-white md:w-[500px] max-w-md shrink-0 shadow-xl border">
+      <div className="hero-content flex-col w-full md:w-[500px] p-[20px] md:p-[0px] ">
+        <div className="card bg-white w-full shrink-0 shadow-xl border">
           <form className="card-body">
             <div className="space-y-2">
               <label className="label">
@@ -58,7 +58,7 @@ function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="john.doe@example.com"
-                  className="input bg-white w-full pl-10 focus:border-black focus:ring-0"
+                  className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0"
                   required
                 />
               </div>
@@ -76,7 +76,7 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="input bg-white w-full pl-10 focus:border-black focus:ring-0"
+                    className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0"
                     required
                   />
                 </div>

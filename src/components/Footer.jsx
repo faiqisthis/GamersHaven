@@ -3,8 +3,8 @@ import { Gamepad2, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 function Footer() {
   return (
     <footer className="border-t lg:p-[64px] p-[20px]" style={{ backgroundColor: '#fefae0', borderColor: 'rgba(96, 108, 56, 0.2)' }}>
-      <div className="container mx-auto lg:px-4 lg:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto lg:px-4 lg:py-12 max-w-[1440px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">

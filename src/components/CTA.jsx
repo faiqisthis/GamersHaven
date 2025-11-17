@@ -2,9 +2,9 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 function CTA() {
   return (
-    <div className='bg-[#fefae0]'>
+    <div className='bg-[#fefae0] '>
 
-  <section className="p-[64px] max-w-[1440px]">
+  <section className="lg:p-[64px] p-[20px] max-w-[1440px] mx-auto">
         <div className="container mx-auto px-4">
           <div className="relative rounded-3xl overflow-hidden">
             <div className="absolute inset-0">

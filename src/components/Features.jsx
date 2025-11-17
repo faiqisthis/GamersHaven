@@ -18,9 +18,9 @@ const Features = () => {
     },
   ];
   return (
-  <section className=" p-[64px] bg-white">
+  <section className=" lg:p-[64px] p-[20px] bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3  gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}

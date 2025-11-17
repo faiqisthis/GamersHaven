@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import UserContext from "../context/user/UserContext";
 import UsersContext from "../context/users/UsersContext";
 import { registerUser } from "../context/user/UserActions";
-import { Gamepad2, Mail, Lock, User, Chrome } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 
 function SignUp() {
   const { user, userDispatch } = useContext(UserContext);
@@ -93,8 +93,8 @@ function SignUp() {
 
   return (
     <div className="hero bg-white min-h-screen">
-      <div className="hero-content flex justify-center items-center">
-        <div className="card bg-white md:w-[500px] max-w-md shrink-0 shadow-2xl">
+      <div className="hero-content flex-col w-full md:w-[500px] p-[20px] md:p-[0px] ">
+        <div className="card bg-white  w-full shrink-0 shadow-2xl border">
           <form className="card-body" onSubmit={handleSubmit}>
             {errors.submit && (
               <div className="alert alert-error">
@@ -115,7 +115,7 @@ function SignUp() {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleChange("firstName")}
-                  className={`input input-bordered bg-white pl-10  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full  focus:border-black focus:ring-0 ${
                     errors.firstName ? "input-error" : ""
                   }`}
                   required
@@ -143,7 +143,7 @@ function SignUp() {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleChange("lastName")}
-                  className={`input input-bordered bg-white pl-10  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full focus:border-black focus:ring-0 ${
                     errors.lastName ? "input-error" : ""
                   }`}
                   required
@@ -171,7 +171,7 @@ function SignUp() {
                   placeholder="email@example.com"
                   value={formData.email}
                   onChange={handleChange("email")}
-                  className={`input input-bordered bg-white pl-10  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full  focus:border-black focus:ring-0 ${
                     errors.email ? "input-error" : ""
                   }`}
                   required
@@ -199,7 +199,7 @@ function SignUp() {
                   placeholder="At least 6 characters"
                   value={formData.password}
                   onChange={handleChange("password")}
-                  className={`input input-bordered bg-white pl-10  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full focus:border-black focus:ring-0 ${
                     errors.password ? "input-error" : ""
                   }`}
                   required
@@ -231,7 +231,7 @@ function SignUp() {
               </button>
             </div>
 
-            <p className="text-center mt-4">
+            <p className="text-center mt-4 text-gray-600">
               Already have an account?{" "}
               <Link to="/login" className=" text-black">
                 Log in
