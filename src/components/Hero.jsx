@@ -13,7 +13,7 @@ function Hero() {
 
   return (
     <>
-      <div className="bg-[#fefae0]  relative">
+      <div className="bg-[#fefae0]  relative ">
         <div className=" lg:py-[64px] py-[20px] flex flex-col md:flex-row max-w-[1440px] mx-auto  ">
           {/* Background Image Div */}
           <div

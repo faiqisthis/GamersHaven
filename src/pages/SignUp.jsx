@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import UserContext from "../context/user/UserContext";
 import UsersContext from "../context/users/UsersContext";
 import { registerUser } from "../context/user/UserActions";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User,Gamepad2 } from "lucide-react";
 
 function SignUp() {
   const { user, userDispatch } = useContext(UserContext);
@@ -93,8 +93,22 @@ function SignUp() {
 
   return (
     <div className="hero bg-white min-h-screen">
-      <div className="hero-content flex-col w-full md:w-[500px] p-[20px] md:p-[0px] ">
-        <div className="card bg-white  w-full shrink-0 shadow-2xl border">
+      <div className="hero-content flex-col w-full max-w-[1440px]  p-[20px] lg:p-[64px] ">
+        <div className="w-full max-w-md">
+          {/* Logo/Brand */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="h-16 w-16 rounded-xl bg-black flex items-center justify-center">
+                <Gamepad2 className="h-10 w-10 text-white " />
+              </div>
+            </div>
+            <h1 className="mb-2 text-black">Welcome to GameVault</h1>
+            <p className="text-gray-500">
+              Sign up to create your account and start shopping
+            </p>
+          </div>
+        </div>
+        <div className="card bg-white max-w-[500px]  w-full shrink-0 shadow-2xl border">
           <form className="card-body" onSubmit={handleSubmit}>
             {errors.submit && (
               <div className="alert alert-error">
@@ -233,7 +247,7 @@ function SignUp() {
 
             <p className="text-center mt-4 text-gray-600">
               Already have an account?{" "}
-              <Link to="/login" className=" text-black">
+              <Link to="/signin" className=" text-black">
                 Log in
               </Link>
             </p>

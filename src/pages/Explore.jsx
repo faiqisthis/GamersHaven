@@ -29,7 +29,7 @@ function Explore() {
   return (
     <>
       <div className="bg-white">
-        <div className="min-h-screen max-w-[1440px] p-[64px] ">
+        <div className="min-h-screen max-w-[1440px] mx-auto p-[64px] ">
           <div className=" w-full min-h-screen pt-5 relative z-10">
             <div>
               <h1 className="md:text-2xl text-xl font-bold px-5 md:mt-5 text-gray-300">

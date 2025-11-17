@@ -4,7 +4,7 @@ import UserContext from "../context/user/UserContext";
 import { loginUser } from "../context/user/UserActions";
 import { useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Lock, Mail, User, Github } from "lucide-react";
+import { Lock, Mail, User, Github, Gamepad2 } from "lucide-react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 function Login() {
   const { user, userDispatch } = useContext(UserContext);
@@ -42,8 +42,22 @@ function Login() {
 
   return (
     <div className="hero bg-white min-h-screen ">
-      <div className="hero-content flex-col w-full md:w-[500px] p-[20px] md:p-[0px] ">
-        <div className="card bg-white w-full shrink-0 shadow-xl border">
+      <div className="hero-content flex-col w-full p-[20px] lg:p-[64px] ">
+        <div className="w-full max-w-md">
+          {/* Logo/Brand */}
+          <div className="text-center my-8">
+            <div className="flex justify-center mb-4">
+              <div className="h-16 w-16 rounded-xl bg-black flex items-center justify-center">
+                <Gamepad2 className="h-10 w-10 text-white " />
+              </div>
+            </div>
+            <h1 className="mb-2 text-black">Welcome to GameVault</h1>
+            <p className="text-gray-500">
+              Sign in to access your account and start shopping
+            </p>
+          </div>
+        </div>
+        <div className="card bg-white w-full shrink-0 shadow-xl border max-w-[500px]">
           <form className="card-body">
             <div className="space-y-2">
               <label className="label">
@@ -92,7 +106,9 @@ function Login() {
 
           <div className="flex items-center gap-4 px-3 py-2">
             <div className="flex-1 h-px bg-gray-300"></div>
-            <p className="text-gray-400 whitespace-nowrap text-[16px]">or Continue With</p>
+            <p className="text-gray-400 whitespace-nowrap text-[16px]">
+              or Continue With
+            </p>
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
           <div className="grid grid-cols-2 gap-3  p-3 mb-3">
