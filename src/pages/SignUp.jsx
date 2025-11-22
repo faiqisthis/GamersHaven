@@ -92,9 +92,9 @@ function SignUp() {
   };
 
   return (
-    <div className="hero bg-white min-h-screen">
-      <div className="hero-content flex-col w-full max-w-[1440px]  p-[20px] lg:p-[64px] ">
-        <div className="w-full max-w-md">
+    <div className=" bg-white ">
+      <div className=" flex-col w-full max-w-[1440px] mx-auto  flex items-center justify-center  px-[20px] pt-[40px] pb-[80px]  lg:p-[64px] ">
+        <div className="w-full max-w-md ">
           {/* Logo/Brand */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
@@ -108,15 +108,15 @@ function SignUp() {
             </p>
           </div>
         </div>
-        <div className="card bg-white max-w-[500px]  w-full shrink-0 shadow-2xl border">
-          <form className="card-body" onSubmit={handleSubmit}>
+        <div className=" bg-white max-w-[500px] p-[30px] rounded-lg  w-full shrink-0 shadow-2xl border">
+          <form className="flex flex-col md:gap-[25px] gap-[20px]" onSubmit={handleSubmit}>
             {errors.submit && (
               <div className="alert alert-error">
                 <span>{errors.submit}</span>
               </div>
             )}
 
-            <div className="form-control">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px] ">
               <label className="label">
                 <span className="label-text text-[16px] font-semibold text-black">
                   First Name
@@ -129,12 +129,12 @@ function SignUp() {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleChange("firstName")}
-                  className={`input input-bordered bg-white pl-10 w-full  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full py-2 pr-1 rounded-lg focus:border-black focus:ring-0 ${
                     errors.firstName ? "input-error" : ""
                   }`}
                   required
                 />
-              </div>
+             </div>
               {errors.firstName && (
                 <label className="label">
                   <span className="label-text-alt text-error">
@@ -144,7 +144,7 @@ function SignUp() {
               )}
             </div>
 
-            <div className="form-control">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label">
                 <span className="label-text text-[16px] font-semibold text-black">
                   Last Name
@@ -157,7 +157,7 @@ function SignUp() {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleChange("lastName")}
-                  className={`input input-bordered bg-white pl-10 w-full focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full py-2 pr-1 rounded-lg focus:border-black focus:ring-0 ${
                     errors.lastName ? "input-error" : ""
                   }`}
                   required
@@ -172,7 +172,7 @@ function SignUp() {
               )}
             </div>
 
-            <div className="form-control">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label">
                 <span className="label-text text-[16px] font-semibold text-black">
                   Email
@@ -185,7 +185,7 @@ function SignUp() {
                   placeholder="email@example.com"
                   value={formData.email}
                   onChange={handleChange("email")}
-                  className={`input input-bordered bg-white pl-10 w-full  focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full py-2 pr-1 rounded-lg focus:border-black focus:ring-0 ${
                     errors.email ? "input-error" : ""
                   }`}
                   required
@@ -200,9 +200,9 @@ function SignUp() {
               )}
             </div>
 
-            <div className="form-control">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label">
-                <span className="label-text text-[16px] font-semibold text-black">
+                <span className="label-text text-[16px] font-semibold  text-black">
                   Password
                 </span>
               </label>
@@ -213,7 +213,7 @@ function SignUp() {
                   placeholder="At least 6 characters"
                   value={formData.password}
                   onChange={handleChange("password")}
-                  className={`input input-bordered bg-white pl-10 w-full focus:border-black focus:ring-0 ${
+                  className={`input input-bordered bg-white pl-10 w-full py-2 pr-1 rounded-lg focus:border-black focus:ring-0 ${
                     errors.password ? "input-error" : ""
                   }`}
                   required
@@ -228,7 +228,7 @@ function SignUp() {
               )}
             </div>
 
-            <div className="form-control mt-6">
+            <div className="w-full bg-black text-white py-2 px-1 rounded-lg font-semibold text-center mt-6">
               <button
                 type="submit"
                 className="btn "

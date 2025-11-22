@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { Mail, User, Gamepad2,MapPin,Phone } from "lucide-react";
 function ContactUs() {
   return (
-    <div className="hero bg-[#fefae0] min-h-screen border-black">
-      <div className="hero-content flex-col w-full  p-[40px] lg:p-[64px]  max-w-[1440px]  ">
+    <div className=" bg-[#fefae0] min-h-screen border-black">
+      <div className=" flex-col w-full  p-[40px] lg:p-[64px]  max-w-[1440px] mx-auto ">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
@@ -55,9 +55,9 @@ function ContactUs() {
           </div>
         </div>
 
-        <div className="card bg-white max-w-[650px]  w-full shrink-0 shadow-2xl border ">
-          <form className="card-body">
-            <div className="form-control">
+        <div className=" bg-white max-w-[650px]  w-full shrink-0 shadow-2xl border mx-auto p-[30px] rounded-lg">
+          <form className="flex flex-col md:gap-[25px] gap-[20px]">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label">
                 <span className="label-text text-[16px] font-semibold text-black">
                   Name
@@ -68,12 +68,12 @@ function ContactUs() {
                 <input
                   type="text"
                   placeholder="Name"
-                  className="input input-bordered bg-white pl-10 w-full text-black focus:border-black focus:ring-0"
+                  className="input input-bordered bg-white pl-10 w-full py-2 pr-1 rounded-lg text-black focus:border-black focus:ring-0"
                   required
                 />
               </div>
             </div>
-            <div className="form-control">
+            <div className="form-control flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label ">
                 <span className="label-text text-[16px] font-semibold text-black">
                   Email
@@ -84,12 +84,12 @@ function ContactUs() {
                 <input
                   type="email"
                   placeholder="email"
-                  className="input input-bordered bg-white pl-10 text-black w-full focus:border-black focus:ring-0"
+                  className="input input-bordered bg-white pl-10 py-2 pr-1 rounded-lg text-black w-full focus:border-black focus:ring-0"
                   required
                 />
               </div>
             </div>
-            <div className="form-control ">
+            <div className="flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label ">
                 <span className="label-text text-[16px] font-semibold text-black">
                   Message
@@ -97,16 +97,16 @@ function ContactUs() {
               </label>
 
               <textarea
-                className="textarea bg-white focus:border-black focus:ring-0  h-[170px] text-black"
+                className="textarea bg-white focus:border-black focus:ring-0 rounded-lg h-[170px] px-2 py-1 text-black"
                 placeholder="Tell us about your inquiry..."
               ></textarea>
             </div>
-            <div className="form-control mt-6">
+            <div className="form-control w-full bg-black text-white py-2 px-1 rounded-lg font-medium cursor-pointer text-center ">
               <button className="btn">Submit</button>
             </div>
           </form>
         </div>
-        <div className="flex flex-row gap-[4px]">
+        <div className="flex flex-row items-center mt-3 justify-center gap-[4px] ">
           <p className="text-gray-600">New to the Website?</p>
           <Link to="/signup">
             <p className="text-center text-black">Sign-Up</p>

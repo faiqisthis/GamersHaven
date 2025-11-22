@@ -41,9 +41,9 @@ function Login() {
   };
 
   return (
-    <div className="hero bg-white min-h-screen ">
-      <div className="hero-content flex-col w-full p-[20px] lg:p-[64px] ">
-        <div className="w-full max-w-md">
+    <div className=" bg-white">
+      <div className=" flex-col w-full p-[20px] lg:p-[64px] max-w-[1440px] mx-auto items-center justify-center flex min-h-screen mb-10">
+        <div className="w-full max-w-md ">
           {/* Logo/Brand */}
           <div className="text-center my-8">
             <div className="flex justify-center mb-4">
@@ -57,9 +57,9 @@ function Login() {
             </p>
           </div>
         </div>
-        <div className="card bg-white w-full shrink-0 shadow-xl border max-w-[500px]">
-          <form className="card-body">
-            <div className="space-y-2">
+        <div className=" bg-white w-full shrink-0 shadow-xl rounded-lg border max-w-[500px]">
+          <form className="p-[30px] ">
+            <div className="space-y-2 flex flex-col md:gap-[15px] gap-[10px]">
               <label className="label">
                 <span className="label-text text-black font-semibold text-[16px]">
                   Email Address
@@ -72,12 +72,12 @@ function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="john.doe@example.com"
-                  className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0"
+                  className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0 rounded-lg py-2 pr-1"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 flex flex-col md:gap-[15px] gap-[10px]">
                 <label className="label">
                   <span className="label-text text-black font-semibold text-[16px]">
                     Password
@@ -90,15 +90,15 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0"
+                    className="input bg-white w-full pl-10 text-black focus:border-black focus:ring-0 rounded-lg py-2 pr-1"
                     required
                   />
                 </div>
               </div>
             </div>
 
-            <div className="form-control mt-6">
-              <button className="btn " onClick={(e) => validateUser(e)}>
+            <div className=" md:mt-10 mt-8">
+              <button className="w-full bg-black text-white py-2 rounded-lg font-semibold" onClick={(e) => validateUser(e)}>
                 Login
               </button>
             </div>
@@ -106,8 +106,8 @@ function Login() {
 
           <div className="flex items-center gap-4 px-3 py-2">
             <div className="flex-1 h-px bg-gray-300"></div>
-            <p className="text-gray-400 whitespace-nowrap text-[16px]">
-              or Continue With
+            <p className="text-gray-400 whitespace-nowrap text-[14px]">
+              Or Continue With
             </p>
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
