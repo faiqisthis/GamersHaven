@@ -4,7 +4,16 @@ import { getProduct } from "../context/product/ProductActions";
 import ProductContext from "../context/product/ProductContext";
 import { addToCart } from "../context/user/UserActions";
 import UserContext from "../context/user/UserContext";
-import { Star, ShoppingCart, Heart, Share2,Truck,Shield,RotateCcw,Award } from "lucide-react";
+import {
+  Star,
+  ShoppingCart,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  RotateCcw,
+  Award,
+} from "lucide-react";
 function ProductDetails() {
   const [product, setProduct] = useState(null); // Initially, product is null
   const [selectedImage, setSelectedImage] = useState(""); // Initialize selectedImage as empty string
@@ -15,6 +24,7 @@ function ProductDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const [liked, setLiked] = useState(false);
+  const [activeTab, setActiveTab] = useState("Features");
 
   useEffect(() => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -32,7 +42,13 @@ function ProductDetails() {
   }, [id]);
 
   const { name, price, description, features, images, stock } = product || {};
+  const discount = 10;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
 
+  const featuresMid = Math.ceil(features?.length / 2);
+  const featuresLeft = features?.slice(0, featuresMid) || [];
+  const featuresRight = features?.slice(featuresMid) || [];
   // Set the first image as selectedImage only if images exist
   useEffect(() => {
     if (images && images.length > 0) {
@@ -66,28 +82,38 @@ function ProductDetails() {
   };
 
   if (loading)
-    return <span className="loading loading-spinner loading-lg"></span>; // Render loading state while product is being fetched
+    return(
+  <div className="bg-[#fefae0]  min-h-screen flex w-full justify-center items-center">
+    <span className="loading loading-spinner loading-xl "></span>
+
+  </div>
+    ); // Render loading state while product is being fetched
 
   return (
     <div className="bg-[#fefae0]">
-      <div className="lg:p-[64px] max-w-[1440px] mx-auto p-[40px] min-h-screen">
+      <div className="lg:p-[64px] max-w-[1440px] mx-auto p-[20px] min-h-screen">
         <div className="flex flex-col lg:flex-row lg:gap-[40px]">
-          <div className="flex flex-col-reverse gap-[20px] w-1/2 ">
+          <div className="flex flex-col-reverse gap-[20px] lg:w-1/2 ">
             <div className="flex flex-row w-full gap-[15px] overflow-x-auto whitespace-nowrap ">
               {images &&
                 images.map((image, index) => (
-                  <div className="aspect-square rounded-lg overflow-hidden "
-                  style={{border:selectedImage === image ? " 2px solid #606c38" : " 2px solid transparent"}}
+                  <div
+                    className="aspect-square rounded-lg overflow-hidden "
+                    style={{
+                      border:
+                        selectedImage === image
+                          ? " 2px solid #606c38"
+                          : " 2px solid transparent",
+                    }}
                   >
-                  <img
-                    key={index}
-                    src={image}
-                    alt="Product Image"
-                    className={`w-full h-full max-h-[150px] max-w-[150px] object-cover cursor-pointer `}
-                    
-                    onClick={() => setSelectedImage(image)} // Update selected image on click
+                    <img
+                      key={index}
+                      src={image}
+                      alt="Product Image"
+                      className={`w-full h-full max-h-[150px] max-w-[150px] object-cover cursor-pointer `}
+                      onClick={() => setSelectedImage(image)} // Update selected image on click
                     />
-                    </div>
+                  </div>
                 ))}
             </div>
             <div className="aspect-square rounded-lg max-h-[450px] overflow-hidden border">
@@ -95,11 +121,11 @@ function ProductDetails() {
                 src={selectedImage}
                 alt="Selected product"
                 className="w-full h-full object-cover"
-                style={{ borderColor: 'rgba(96, 108, 56, 0.2)'}}
+                style={{ borderColor: "rgba(96, 108, 56, 0.2)" }}
               />
             </div>
           </div>
-          <div className=" w-1/2 flex flex-col">
+          <div className=" lg:w-1/2 flex flex-col mt-[40px] lg:mt-0">
             <h1 className="text-[20px] text-[#4d4d4d]">{name || ""}</h1>
             {/* Rating */}
             <div className="flex items-center gap-[10px] mt-[8px]">
@@ -130,9 +156,32 @@ function ProductDetails() {
             <p className="  w-[90%] text-justify text-[#606c38] py-[15px]">
               {description || ""}
             </p>
-            <h1 className="text-[30px] mt-3 font-semibold text-[#606c38]">
-              {`$${price}` || ""}
-            </h1>
+            <div className="flex items-baseline gap-4 mt-3">
+              <span
+                className="text-3xl font-semibold"
+                style={{ color: "#606c38" }}
+              >
+                ${discountedPrice.toFixed(2)}
+              </span>
+
+              {discount > 0 && (
+                <span
+                  className="text-xl line-through"
+                  style={{ color: "#717182" }}
+                >
+                  ${price ? price.toFixed(2) : ""}
+                </span>
+              )}
+
+              {discount > 0 && (
+                <div
+                  style={{ backgroundColor: "#d4183d", color: "#ffffff" }}
+                  className="rounded-md text-[12px] font-semibold px-2 py-[1px]"
+                >
+                  Save {discount}%
+                </div>
+              )}
+            </div>
 
             {/* Stock Status */}
             <div className="flex items-center gap-2 my-[20px]">
@@ -176,7 +225,7 @@ function ProductDetails() {
               <div className="flex gap-3">
                 <button
                   className="w-full flex py-[10px] justify-center rounded-lg"
-                  style={{ backgroundColor: '#606c38', color: '#fefae0' }}
+                  style={{ backgroundColor: "#606c38", color: "#fefae0" }}
                   onClick={handleCartAddition}
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
@@ -203,63 +252,69 @@ function ProductDetails() {
               </div>
             </div>
 
-            {/* <div className="flex">
-              <button
-                onClick={handleCartAddition}
-                className="mt-5 btn btn-secondary btn-md w-[30%] btn-circle"
-              >
-                Add to Cart
-              </button>
-              <div className="flex ml-5 mt-5 btn btn-circle btn-md sm:w-[20%] w-[35%] ">
-                <button
-                  onClick={() => setQuantity(quantity - 1)}
-                  disabled={quantity === 0 ? true : false}
-                  className="sm:text-5xl text-3xl mr-3 sm:mr-5"
-                >
-                  -
-                </button>
-                <p className="text-xl sm:text-2xl my-auto">{quantity}</p>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="sm:text-3xl text-2xl ml-3 sm:ml-5"
-                >
-                  +
-                </button>
-              </div>
-            </div> */}
-
             {/* Features */}
-            <div className="grid grid-cols-2 gap-4 pt-6 mt-6 border-t" style={{ borderColor: 'rgba(96, 108, 56, 0.2)' }}>
+            <div
+              className="grid grid-cols-2 gap-4 pt-6 mt-6 border-t"
+              style={{ borderColor: "rgba(96, 108, 56, 0.2)" }}
+            >
               <div className="flex items-start gap-3">
-                <Truck className="h-5 w-5 flex-shrink-0 mt-1" style={{ color: '#606c38' }} />
+                <Truck
+                  className="h-5 w-5 flex-shrink-0 mt-1"
+                  style={{ color: "#606c38" }}
+                />
                 <div>
-                  <p className="text-sm" style={{ color: '#283618' }}>Free Shipping</p>
-                  <p className="text-xs" style={{ color: '#606c38' }}>On orders over $50</p>
+                  <p className="text-sm" style={{ color: "#283618" }}>
+                    Free Shipping
+                  </p>
+                  <p className="text-xs" style={{ color: "#606c38" }}>
+                    On orders over $50
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 flex-shrink-0 mt-1" style={{ color: '#606c38' }} />
+                <Shield
+                  className="h-5 w-5 flex-shrink-0 mt-1"
+                  style={{ color: "#606c38" }}
+                />
                 <div>
-                  <p className="text-sm" style={{ color: '#283618' }}>1 Year Warranty</p>
-                  <p className="text-xs" style={{ color: '#606c38' }}>Manufacturer guarantee</p>
+                  <p className="text-sm" style={{ color: "#283618" }}>
+                    1 Year Warranty
+                  </p>
+                  <p className="text-xs" style={{ color: "#606c38" }}>
+                    Manufacturer guarantee
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <RotateCcw className="h-5 w-5 flex-shrink-0 mt-1" style={{ color: '#606c38' }} />
+                <RotateCcw
+                  className="h-5 w-5 flex-shrink-0 mt-1"
+                  style={{ color: "#606c38" }}
+                />
                 <div>
-                  <p className="text-sm" style={{ color: '#283618' }}>30-Day Returns</p>
-                  <p className="text-xs" style={{ color: '#606c38' }}>Hassle-free returns</p>
+                  <p className="text-sm" style={{ color: "#283618" }}>
+                    30-Day Returns
+                  </p>
+                  <p className="text-xs" style={{ color: "#606c38" }}>
+                    Hassle-free returns
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Award className="h-5 w-5 flex-shrink-0 mt-1" style={{ color: '#606c38' }} />
+                <Award
+                  className="h-5 w-5 flex-shrink-0 mt-1"
+                  style={{ color: "#606c38" }}
+                />
                 <div>
-                  <p className="text-sm" style={{ color: '#283618' }}>Authentic Products</p>
-                  <p className="text-xs" style={{ color: '#606c38' }}>100% genuine</p>
+                  <p className="text-sm" style={{ color: "#283618" }}>
+                    Authentic Products
+                  </p>
+                  <p className="text-xs" style={{ color: "#606c38" }}>
+                    100% genuine
+                  </p>
                 </div>
               </div>
             </div>
-  
+
             {/* <h1 className="text-2xl mt-5 font-bold text-black">Features</h1>
             <ul className="list-none list-inside mt-5 mb-5 text-gray-400">
               {features ? (
@@ -274,6 +329,45 @@ function ProductDetails() {
             </ul> */}
           </div>
         </div>
+
+        {/* Features + Specifications + Reviews */}
+        <div
+          className="flex flex-row w-full justify-around border-b md:my-20 my-10 pb-2 text-[#606c38] "
+          style={{ borderColor: "rgba(96, 108, 56, 0.2)" }}
+        >
+          {["Features", "Specifications", "Reviews"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`${
+                activeTab === tab ? "border-b-2 border-[#606c38]" : ""
+              } `}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        {activeTab === "Features" && (
+          <div className="grid md:grid-cols-2 grid-cols-1">
+            {/* Column 1 */}
+            <ul className="list-disc list-inside text-[#606c38] marker:text-2xl">
+              {featuresLeft.map((feature, index) => (
+                <li key={index} className="text-lg">
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            {/* Column 2 */}
+            <ul className="list-disc list-inside text-[#606c38] marker:text-2xl">
+              {featuresRight.map((feature, index) => (
+                <li key={index} className="text-lg ">
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
