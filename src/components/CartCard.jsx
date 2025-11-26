@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaTrash } from "react-icons/fa";
+import { X } from "lucide-react";
+
 import UserContext from "../context/user/UserContext";
 import { updateCart } from "../context/user/UserActions";
 function CartCard({ item }) {
@@ -42,92 +43,49 @@ function CartCard({ item }) {
   };
 
   return (
-    <div className="grid grid-cols-4 md:grid-cols-3">
-      <div className="col-span-4 md:col-span-1 flex">
+    <div className="flex justify-between w-full border p-[20px] rounded-lg">
+      <div className="flex ">
         <img
-          className="md:w-[170px] h-[170px] w-[140px] ml-3 object-fill flex-shrink-0"
+          className=" h-[130px] w-[130px]  object-cover flex-shrink-0 rounded-lg"
           src={item?.productId.images[0]}
         />
-        <div className="card flex flex-col">
-          <div className="p-3 ml-5">
-            <div className="card-title">{item?.productId.name}</div>
-            <div className="card-normal text-balance mt-1">
-              {item?.productId.brand}
-            </div>
+        <div className="card flex flex-col gap-[2px] ml-4">
+          <div className="card-title">{item?.productId.name}</div>
+          <div className="card-normal text-balance mt-1">
+            {item?.productId.brand}
           </div>
 
-          {/* Mobile-only layout */}
-          <div className="flex flex-col items-start gap-2 md:hidden">
-            <p className="text-lg font-bold ml-7">${item?.productId.price}</p>
-            <FaTrash
-              onClick={handleItemDelete}
-              className="cursor-pointer ml-7"
-              size={18}
-            />
-            <div className="btn btn-circle btn-lg w-[130px] flex justify-around ml-3 ">
-              <button
-                onClick={() => {
-                  setQuantity(quantity - 1);
-                  handleItemUpdate(quantity - 1);
-                }}
-                disabled={quantity === 1 ? true : false}
-                className="text-5xl"
-              >
-                -
-              </button>
-              <p className="">{quantity}</p>
-              <button
-                onClick={() => {
-                  setQuantity(quantity + 1);
-                  handleItemUpdate(quantity + 1);
-                }}
-                className="text-2xl"
-              >
-                +
-              </button>
-            </div>
-            <br />
+          <div className=" flex justify-between border-2 mt-4 rounded-lg items-center w-[120px]">
+            <button
+              onClick={() => {
+                setQuantity(quantity - 1);
+                handleItemUpdate(quantity - 1);
+              }}
+              disabled={quantity === 1 ? true : false}
+              className="text-3xl hover:bg-gray-300 px-2 rounded-md"
+            >
+              -
+            </button>
+            <p>{quantity}</p>
+            <button
+              onClick={() => {
+                setQuantity(quantity + 1);
+                handleItemUpdate(quantity + 1);
+              }}
+              className="text-3xl hover:bg-gray-300 px-1 rounded-md"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>
-
       {/* Desktop layout */}
-      <div className="hidden md:flex justify-center mt-3">
-        <div className="text-lg font-bold flex flex-col">
-          <p>${item?.productId.price}</p>
-          <FaTrash
-            onClick={handleItemDelete}
-            className="cursor-pointer mt-2"
-            size={18}
-          />
-        </div>
+      <div className="flex flex-col justify-between items-end">
+        <button className="hover:bg-gray-300 p-2 rounded-lg group  " onClick={handleItemDelete}>
+          <X className="h-4 w-4 group-hover:text-red-500" />
+        </button>
+        <p className="text-lg font-semibold">${item?.productId.price}</p>
       </div>
-
-      <div className="hidden md:flex justify-center">
-        <div className="btn btn-circle btn-lg w-[50%] lg:w-[35%] flex justify-around">
-          <button
-            onClick={() => {
-              setQuantity(quantity - 1);
-              handleItemUpdate(quantity - 1);
-            }}
-            disabled={quantity === 1 ? true : false}
-            className="text-5xl"
-          >
-            -
-          </button>
-          <p>{quantity}</p>
-          <button
-            onClick={() => {
-              setQuantity(quantity + 1);
-              handleItemUpdate(quantity + 1);
-            }}
-            className="text-3xl"
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <br />
     </div>
   );
 }
