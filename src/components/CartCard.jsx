@@ -43,10 +43,10 @@ function CartCard({ item }) {
   };
 
   return (
-    <div className="flex justify-between w-full border p-[20px] rounded-lg">
+    <div className="flex justify-between w-full border p-[10px] rounded-lg">
       <div className="flex ">
         <img
-          className=" h-[130px] w-[130px]  object-cover flex-shrink-0 rounded-lg"
+          className=" h-[80px] w-[80px] sm:h-[130px] sm:w-[130px] object-cover flex-shrink-0 rounded-lg"
           src={item?.productId.images[0]}
         />
         <div className="card flex flex-col gap-[2px] ml-4">
@@ -55,7 +55,7 @@ function CartCard({ item }) {
             {item?.productId.brand}
           </div>
 
-          <div className=" flex justify-between border-2 mt-4 rounded-lg items-center w-[120px]">
+          <div className=" flex justify-between border-2 mt-4 rounded-lg items-center md:w-[120px] w-[90px] sm:w-[100px]">
             <button
               onClick={() => {
                 setQuantity(quantity - 1);
