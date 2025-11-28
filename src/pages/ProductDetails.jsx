@@ -4,6 +4,7 @@ import { getProduct } from "../context/product/ProductActions";
 import ProductContext from "../context/product/ProductContext";
 import { addToCart } from "../context/user/UserActions";
 import UserContext from "../context/user/UserContext";
+import { toast } from "react-hot-toast";
 import {
   Star,
   ShoppingCart,
@@ -62,7 +63,7 @@ function ProductDetails() {
       const response = await addToCart(productId, quantity);
       if (response) {
         userDispatch({ type: "SET_CART", payload: response.data });
-        alert("Added to Cart Successfully");
+     toast.success("Added to Cart Successfully", { position: "top-center" });
       }
     } else {
       navigate("/signin", { state: { from: location.pathname } });
@@ -74,10 +75,10 @@ function ProductDetails() {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        alert("Link copied to clipboard!");
+        toast.success("Link copied to clipboard!", { position: "top-center" });
       })
       .catch(() => {
-        alert("Failed to copy link");
+        toast.error("Failed to copy link", { position: "top-center" }); 
       });
   };
 

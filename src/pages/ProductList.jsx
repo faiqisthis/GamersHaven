@@ -5,6 +5,7 @@ import { FaTrash,FaEdit } from "react-icons/fa";
 import ProductContext from "../context/product/ProductContext";
 import EditBox from "../components/EditItemBox";
 import AddItemBox from "../components/AddItemBox";
+import { toast } from "react-hot-toast";
 function ItemList() {
   const { consoles, games, accessories, dispatch, loading } =
     useContext(ProductContext);
@@ -42,7 +43,7 @@ function ItemList() {
         type: "DELETE_PRODUCT",
         payload: item._id,
       });
-      alert("Product Deleted Successfully!");
+   toast.success("Product Deleted Successfully!", { position: "top-center" });
     }
   };
   

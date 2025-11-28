@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Lock, Mail, User, Github, Gamepad2 } from "lucide-react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 function Login() {
   const { user, userDispatch } = useContext(UserContext);
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ function Login() {
     e.preventDefault();
     const token = await loginUser(email, password);
     if (token) {
-      alert("Logged In Successfully");
+      toast.success("Logged In Successfully", { position: "top-center" });
       userDispatch({
         type: "SET_TOKEN",
         payload: token,

@@ -23,6 +23,7 @@ import MyOrders from "./pages/MyOrders";
 import Features from "./components/Features";
 import CTA from "./components/CTA";
 import UserContext from "./context/user/UserContext";
+import { Toaster } from "react-hot-toast";
 
 const ScrollToTop = ({ children }) => {
   // Destructure hash along with pathname
@@ -69,6 +70,7 @@ function App() {
           <ProductProvider>
             <UsersProvider>
               <Router>
+                <Toaster position="top-center" reverseOrder={false} />
                 {/* WRAPPING Routes with ScrollToTop */}
                 <ScrollToTop>
                   <Routes>
@@ -229,6 +231,7 @@ function App() {
                     />
                   </Routes>
                 </ScrollToTop>
+                
               </Router>
             </UsersProvider>
           </ProductProvider>

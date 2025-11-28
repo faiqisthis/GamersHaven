@@ -106,7 +106,6 @@ export const submitOrder = async (data) => {
     throw new Error("Order submission failed.");
   } catch (error) {
     console.error("Error during checkout:", error.message);
-    alert("An error occurred during checkout. Please try again.");
     throw error;
   }
 };

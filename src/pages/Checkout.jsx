@@ -8,6 +8,7 @@ import UserContext from "../context/user/UserContext";
 import OrderSummary from "../components/OrderSummary";
 import OrdersContext from "../context/orders/OrdersContext";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { toast } from "react-hot-toast";
 
 // Stripe imports
 import { loadStripe } from "@stripe/stripe-js";
@@ -77,7 +78,7 @@ const CheckoutPage = () => {
       postalCode.trim() === "" ||
       phone.trim() === ""
     ) {
-      alert("Please fill all the required fields in Contact Form");
+   toast.error("Please fill all the required fields in Contact Form", { position: "top-center" });
       return false;
     }
     if (billingAddress === "different") {
@@ -88,7 +89,7 @@ const CheckoutPage = () => {
         billingPostalCode.trim() === "" ||
         billingPhone.trim() === ""
       ) {
-        alert("Please fill all the required fields in Billing Form");
+toast.error("Please fill all the required fields in Billing Form", { position: "top-center" });
         return false;
       }
     }
@@ -98,7 +99,7 @@ const CheckoutPage = () => {
       !cart.items ||
       cart.items.length === 0
     ) {
-      alert("Your cart is empty");
+toast.error("Your cart is empty", { position: "top-center" });
       return false;
     }
     return true;
@@ -156,11 +157,11 @@ const CheckoutPage = () => {
       });
       const updateResp = await updateCart(newCart);
       if (updateResp.success) {
-        alert("Order submitted successfully");
+     toast.success("Order submitted successfully", { position: "top-center" });
         navigate("/");
       }
     } else {
-      alert("Failed to submit order");
+      toast.error("Failed to submit order", { position: "top-center" });
     }
   };
 
@@ -284,11 +285,11 @@ const CheckoutPage = () => {
         });
         const updateResp = await updateCart(newCart);
         if (updateResp.success) {
-          alert("Order submitted successfully");
+        toast.success("Order submitted successfully", { position: "top-center" });
           navigate("/");
         }
       } else {
-        alert("Failed to submit order");
+        toast.error("Failed to submit order", { position: "top-center" });
       }
     };
 
@@ -374,11 +375,12 @@ const CheckoutPage = () => {
               {/* Delivery Address */}
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  
+                  <div className="flex-col md:flex-row flex">
+
                   <input
                     type="text"
                     value={firstName}
-                    className="px-2 py-2 rounded-lg"
+                    className="px-2 py-2 rounded-lg w-full"
                     placeholder="First Name"
                     onChange={(e) => setFirstName(e.target.value)}
                     />
@@ -386,10 +388,11 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     value={lastName}
-                    className="px-2 py-2 rounded-lg"
+                    className="px-2 py-2 rounded-lg w-full"
                     placeholder="Last Name"
                     onChange={(e) => setLastName(e.target.value)}
                   />
+                    </div>
                
                 <input
                   type="text"
