@@ -58,7 +58,7 @@ function Cart() {
           </div>
         </div>
       </div>
-      <div className="lg:min-h-screen grid grid-cols-1 lg:grid-cols-3 lg:p-[64px] md:-[48px] p-[30px] gap-[30px]">
+      <div className="lg:min-h-screen grid grid-cols-1 lg:grid-cols-3 lg:p-[64px] md:-[48px] p-[30px] gap-[30px] max-w-[1440px] mx-auto">
         <div className="lg:col-span-2">
           {user && user.cart.items.length > 0 ? (
             user.cart.items.map((item, index) => (

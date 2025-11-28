@@ -210,6 +210,7 @@ function App() {
                       path="/checkout"
                       element={
                         <div>
+                          <Navbar />
                           <Checkout />
                           <Footer />
                         </div>

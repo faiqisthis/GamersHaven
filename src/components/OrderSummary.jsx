@@ -2,8 +2,8 @@ import React from "react";
 
 const OrderSummary = ({ cartItems, subtotal }) => {
   return (
-    <div className="w-full p-4 rounded-md shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+    <div className="w-full p-4 rounded-md md:shadow-md">
+      <h2 className="text-lg font-semibold mb-4 hidden md:block">Order Summary</h2>
       <div className="space-y-4">
         {cartItems?.map((item) => (
           <div key={item.productId._id} className="flex justify-between">
